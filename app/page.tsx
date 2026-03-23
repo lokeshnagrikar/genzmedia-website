@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Hero from "@/components/hero"
 import About from "@/components/about"
 import Services from "@/components/services"
+import Team from "@/components/team"
 import Portfolio from "@/components/portfolio"
 import WhoWeWorkWith from "@/components/who-we-work-with"
 import Trust from "@/components/trust"
@@ -26,6 +27,7 @@ export default function Home() {
           <Hero />
           <About />
           <Services />
+          <Team />
           <Portfolio />
           <WhoWeWorkWith />
           <Trust />

@@ -1,7 +1,9 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
 import { Play } from "lucide-react"
+import { motion } from "framer-motion"
+
+import { SplitText } from "./split-text"
 
 const videos = [
   {
@@ -30,29 +32,7 @@ const videos = [
   },
 ]
 
-
 export default function Portfolio() {
-  const [visibleCards, setVisibleCards] = useState<number[]>([])
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          videos.forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...new Set([...prev, index])])
-            }, index * 100)
-          })
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-
   const getThumbnailUrl = (reelId: string) => {
     return `https://www.instagram.com/p/${reelId}/media/?size=l`
   }
@@ -61,71 +41,96 @@ export default function Portfolio() {
     window.open(url, "_blank", "noopener,noreferrer")
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 30 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } }
+  }
+
   return (
     <section id="portfolio" className="relative py-20 md:py-32 bg-slate-950 border-t border-slate-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              Our Work
-            </span>
-          </h2>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8">
+          <SplitText 
+            text="Our Work" 
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:via-pink-400 [&>span]:to-blue-400 pb-2 justify-center"
+          />
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg text-slate-300 max-w-2xl mx-auto mb-8"
+          >
             Every project follows a clear process: Concept → Design/Edit → Purpose → Audience. We focus on quality,
             clarity, and consistency.
-          </p>
+          </motion.p>
         </div>
 
         {/* Video Grid - Changed to 9:16 ratio portrait layout */}
-        <div ref={ref} className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16">
-          {videos.map((video, index) => {
-            const isVisible = visibleCards.includes(index)
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16"
+        >
+          {videos.map((video, index) => (
+            <motion.div
+              key={video.id}
+              variants={itemVariants}
+              className="group relative rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] transition-all duration-500"
+              onClick={() => handleOpenReel(video.url)}
+            >
+              <div className="relative w-full aspect-[9/16] bg-slate-800/80 overflow-hidden rounded-xl border border-slate-700/50 group-hover:border-purple-500/80 transition-all duration-300">
+                {/* Thumbnail Image with Magic Hover (Grayscale to Color) */}
+                <img
+                  src={getThumbnailUrl(video.id)}
+                  alt={video.title}
+                  className="w-full h-full object-cover scale-100 group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                  onError={(e) => {
+                    e.currentTarget.src = video.thumbnail
+                  }}
+                />
 
-            return (
-              <div
-                key={video.id}
-                className={`group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                onClick={() => handleOpenReel(video.url)}
-              >
-                <div className="relative w-full aspect-[9/16] bg-slate-800 overflow-hidden rounded-xl border border-slate-700 group-hover:border-purple-500/50 transition-all duration-300">
-                  {/* Thumbnail Image */}
-                  <img
-  src={getThumbnailUrl(video.id)}
-  alt={video.title}
-  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-  onError={(e) => {
-    e.currentTarget.src = video.thumbnail
-  }}
-/>
-
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 shadow-lg">
-                      <Play size={32} className="text-white ml-1" fill="white" />
-                    </div>
-                  </div>
-
-                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent">
-                    <h3 className="text-white font-bold text-sm md:text-base">{video.title}</h3>
+                {/* Animated Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-500" />
+                
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-500 shadow-[0_0_20px_rgba(236,72,153,0.5)]">
+                    <Play size={28} className="text-white ml-1 translate-x-0.5" fill="white" />
                   </div>
                 </div>
+
+                {/* Title sliding up */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                  <h3 className="text-white font-bold text-lg drop-shadow-md">{video.title}</h3>
+                </div>
               </div>
-            )
-          })}
-        </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Call to Action */}
-        <div className="text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center"
+        >
           <a
             href="#contact"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-xl hover:shadow-[0_0_30px_rgba(236,72,153,0.4)] transition-all duration-300 transform hover:-translate-y-1"
           >
             Want to work with us?
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

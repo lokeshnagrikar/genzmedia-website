@@ -2,6 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import CustomCursor from "@/components/custom-cursor"
+import Preloader from "@/components/preloader"
+import SmoothScroll from "@/components/smooth-scroll"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -37,10 +40,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth dark">
-      <body className={`font-sans antialiased bg-slate-950 text-white`}>
-        {children}
-        <Analytics />
+    <html lang="en" className="dark">
+      <body className={`font-sans antialiased bg-slate-950 text-white cursor-auto md:cursor-none`}>
+        <SmoothScroll>
+          <Preloader />
+          <CustomCursor />
+          {children}
+          <Analytics />
+        </SmoothScroll>
       </body>
     </html>
   )

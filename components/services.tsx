@@ -1,7 +1,8 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
-import { Palette, Video, Pen, Share2, TrendingUp } from "lucide-react"
+import { Palette, Video, Pen, Share2, TrendingUp, Code } from "lucide-react"
+import { motion } from "framer-motion"
+import { SplitText } from "./split-text"
 
 const servicesList = [
   {
@@ -35,55 +36,71 @@ const servicesList = [
       "Result-focused campaigns with ad creative design, audience targeting, and ethical brand-safe advertising",
     color: "from-cyan-600 to-blue-600",
   },
+  {
+    icon: Code,
+    title: "Website Development",
+    description: "High-performance, beautifully animated custom websites tailored to scale your brand",
+    color: "from-indigo-600 to-purple-600",
+  },
 ]
 
 export default function Services() {
-  const [visibleCards, setVisibleCards] = useState<number[]>([])
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          servicesList.forEach((_, index) => {
-            setTimeout(() => {
-              setVisibleCards((prev) => [...new Set([...prev, index])])
-            }, index * 150)
-          })
-        }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
       },
-      { threshold: 0.1 },
-    )
+    },
+  }
 
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6 } 
+    },
+  }
 
   return (
     <section id="services" className="relative py-20 md:py-32 bg-slate-950 border-t border-slate-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">What We Do</span>
-          </h2>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+          <SplitText 
+            text="What We Do" 
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:via-pink-400 [&>span]:to-blue-400 pb-2 justify-center"
+          />
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-xl text-slate-300 max-w-2xl mx-auto"
+          >
             Comprehensive creative services designed to help your brand stand out and grow
-          </p>
+          </motion.p>
         </div>
 
         {/* Service Cards */}
-        <div ref={ref} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {servicesList.map((service, index) => {
             const Icon = service.icon
-            const isVisible = visibleCards.includes(index)
 
             return (
-              <div
+              <motion.div
                 key={index}
-                className={`group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700 backdrop-blur transition-all duration-500 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20 hover:scale-105 cursor-pointer ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
+                variants={itemVariants}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700 backdrop-blur transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] cursor-pointer"
               >
                 {/* Gradient Glow on Hover */}
                 <div
@@ -104,10 +121,10 @@ export default function Services() {
                   </h3>
                   <p className="text-slate-300 text-sm leading-relaxed">{service.description}</p>
                 </div>
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
