@@ -4,6 +4,23 @@ import { Instagram } from "lucide-react"
 import { motion } from "framer-motion"
 import { SplitText } from "./split-text"
 
+const founders = [
+  {
+    name: "Sahil Kamdi",
+    role: "Founder",
+    instagram: "https://www.instagram.com/sahilkamdi_",
+    color: "from-amber-500 to-orange-600",
+    image: "/sahil.png",
+  },
+  {
+    name: "Navin Bankar",
+    role: "Co-Founder",
+    instagram: "https://www.instagram.com/navin____24k",
+    color: "from-rose-500 to-red-600",
+    image: "/navin.png",
+  },
+]
+
 const teamMembers = [
   {
     name: "Rohan Sahare",
@@ -72,12 +89,73 @@ export default function Team() {
           </motion.p>
         </div>
 
+        {/* Founders */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="flex flex-wrap justify-center gap-6"
+           variants={containerVariants}
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true, margin: "-50px" }}
+           className="flex flex-wrap justify-center gap-8 mb-12 sm:mb-16"
+        >
+          {founders.map((member, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="group relative w-full sm:w-[calc(50%-16px)] lg:w-[420px] max-w-[460px] flex-shrink-0 bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-[2rem] p-8 sm:p-10 border border-slate-700/80 backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)] overflow-hidden"
+            >
+              {/* Inner Glow Map based on role to differentiate amber and rose */}
+              <div className={`absolute inset-0 bg-gradient-to-b ${member.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+
+              <div className="relative z-10 flex flex-col items-center text-center h-full justify-between">
+                <div className="w-full">
+                  <div className={`relative w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr items-center justify-center flex mb-8 mx-auto ${member.color} p-1.5 group-hover:scale-105 shadow-2xl transition-all duration-500`}>
+                    <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden border-[4px] border-slate-950 relative">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover relative z-10 transition-opacity duration-500 bg-slate-800"
+                        onError={(e) => {
+                          e.currentTarget.style.opacity = '0'
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center text-5xl font-black text-white uppercase z-0">
+                        {member.name[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-2 tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-pink-200 transition-colors">
+                    {member.name}
+                  </h3>
+                  <p className={`font-bold text-sm sm:text-base mb-8 uppercase tracking-widest ${member.name === 'Sahil Kamdi' ? 'text-amber-400' : 'text-rose-400'}`}>
+                    {member.role}
+                  </p>
+                </div>
+
+                <a
+                  href={member.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto px-8 py-4 rounded-xl bg-slate-800/80 border border-slate-700 hover:border-white/30 flex items-center gap-2 group/btn transition-colors w-full justify-center shadow-lg"
+                >
+                  <Instagram size={20} className="text-white group-hover/btn:scale-110 transition-transform" />
+                  <span className="text-base font-bold text-slate-300 group-hover/btn:text-white transition-colors">
+                    Follow
+                  </span>
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Team Members */}
+        <motion.div
+           variants={containerVariants}
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true, margin: "-50px" }}
+           className="flex flex-wrap justify-center gap-6"
         >
           {teamMembers.map((member, index) => (
             <motion.div

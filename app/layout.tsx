@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import CustomCursor from "@/components/custom-cursor"
 import Preloader from "@/components/preloader"
 import SmoothScroll from "@/components/smooth-scroll"
+import ScrollToTop from "@/components/scroll-to-top"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -45,6 +46,7 @@ export default function RootLayout({
         <SmoothScroll>
           <Preloader />
           <CustomCursor />
+          <ScrollToTop />
           {children}
           <Analytics />
         </SmoothScroll>
