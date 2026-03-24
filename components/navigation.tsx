@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
-
-import MagneticButton from "./magnetic-button"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const [active, setActive] = useState<number | null>(null)
+  const [scrolled, setScrolled] = useState(false)
+  const navRef = useRef(null)
 
   const navLinks = [
     { label: "Home", href: "#home" },
@@ -16,83 +18,126 @@ export default function Navigation() {
     { label: "Portfolio", href: "#portfolio" },
   ]
 
+  // Scroll effect (Apple style)
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link href="/" className="flex items-center cursor-pointer group">
-            <span className="text-2xl font-black tracking-tight text-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 transition-all duration-300">
+    <motion.nav
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+          ? "bg-slate-950/70 backdrop-blur-2xl border-b border-white/10 h-16"
+          : "bg-transparent h-20"
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+
+        {/* 🔥 LOGO */}
+        <Link href="/" className="group relative">
+          <span className="text-2xl font-black tracking-tight relative">
+
+            {/* Glow */}
+            <span className="absolute inset-0 blur-lg opacity-60 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
               GENZMEDIA
             </span>
-          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300"
-              >
-                {link.label}
-              </a>
-            ))}
-            
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="relative inline-flex items-center justify-center px-6 py-2.5 rounded-xl text-white font-bold shadow-lg shadow-purple-500/20 bg-gradient-to-r from-purple-600 to-pink-600 overflow-hidden group transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] border border-purple-400/20"
-              >
-                {/* Diagonal Light Sweep */}
-                <div className="absolute inset-0 -translate-x-[150%] skew-x-[-30deg] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent w-full h-full" />
+            {/* Animated Gradient */}
+            <span className="relative bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x group-hover:scale-110 transition">
+              GENZMEDIA
+            </span>
+          </span>
+        </Link>
 
-                <span className="relative z-10 flex items-center gap-2.5">
-                  Get Started
-                  {/* Pulsing Availability Dot */}
-                  <span className="relative flex h-2.5 w-2.5 pt-0.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                  </span>
-                </span>
-              </a>
-            </MagneticButton>
-          </div>
+        {/* 🧠 DESKTOP NAV */}
+        <div className="hidden md:flex items-center gap-10 relative">
+          {navLinks.map((link, i) => (
+            <motion.a
+              key={link.href}
+              href={link.href}
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
+              className="relative text-sm font-semibold text-slate-300 hover:text-white transition"
+            >
+              {link.label}
 
-          {/* Mobile Menu Button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white p-2">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+              {/* 🔥 Hover underline (Stripe style) */}
+              <AnimatePresence>
+                {active === i && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500"
+                    initial={{ opacity: 0, scaleX: 0.5 }}
+                    animate={{ opacity: 1, scaleX: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </AnimatePresence>
+            </motion.a>
+          ))}
         </div>
 
-        {/* Mobile Navigation */}
+        {/* ⚡ CTA BUTTON */}
+        <motion.a
+          href="#contact"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="hidden md:inline-flex items-center px-6 py-2.5 rounded-xl text-white font-bold bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/20 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] transition-all"
+        >
+          Get Started
+        </motion.a>
+
+        {/* 📱 MOBILE BUTTON */}
+        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white">
+          {isOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* 📱 MOBILE MENU */}
+      <AnimatePresence>
         {isOpen && (
-          <div className="md:hidden pb-6 border-t border-slate-800/50 pt-4 space-y-2 bg-slate-950/95 backdrop-blur-3xl absolute left-0 right-0 px-4 shadow-2xl">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="block py-3 px-4 rounded-lg text-base font-bold text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <div className="pt-4 pb-2 px-4 w-full">
-              <a
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-slate-950/95 backdrop-blur-2xl border-t border-white/10"
+          >
+            <div className="flex flex-col px-6 py-6 space-y-4">
+              {navLinks.map((link, i) => (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className="text-lg font-semibold text-slate-300 hover:text-white transition"
+                >
+                  {link.label}
+                </motion.a>
+              ))}
+
+              <motion.a
                 href="#contact"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold shadow-lg shadow-purple-500/20 active:scale-95 transition-transform"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-4 text-center py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold"
               >
                 Get Started
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
-    </nav>
+      </AnimatePresence>
+    </motion.nav>
   )
 }

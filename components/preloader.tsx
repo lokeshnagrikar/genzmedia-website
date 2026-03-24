@@ -6,8 +6,13 @@ import { motion, AnimatePresence } from "framer-motion"
 export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
 
-  // Progress logic
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Progress simulation
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -15,14 +20,14 @@ export default function Preloader() {
           clearInterval(interval)
           return 100
         }
-        return prev + 2
+        return prev + 1.5
       })
-    }, 40)
+    }, 30)
 
     return () => clearInterval(interval)
   }, [])
 
-  // Control loading + scroll lock
+  // Exit control
   useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = "hidden"
@@ -34,7 +39,7 @@ export default function Preloader() {
       setTimeout(() => {
         setIsLoading(false)
         window.scrollTo(0, 0)
-      }, 400)
+      }, 500)
     }
 
     return () => {
@@ -48,84 +53,122 @@ export default function Preloader() {
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          initial={{ y: 0, opacity: 1 }}
+          initial={{ opacity: 1, scale: 1 }}
           exit={{
-            y: "-100%",
             opacity: 0,
-            filter: "blur(10px)",
+            scale: 1.1,
+            filter: "blur(12px)",
           }}
-          transition={{
-            duration: 0.9,
-            ease: [0.76, 0, 0.24, 1],
-          }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-slate-950 overflow-hidden"
         >
-          {/* 🌈 Animated Gradient Background */}
+          {/* 🌌 Animated Gradient Background */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-purple-900 via-slate-950 to-pink-900 opacity-40"
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity }}
+            className="absolute inset-0 bg-gradient-to-br from-purple-900 via-slate-950 to-pink-900"
+            animate={{ opacity: [0.4, 0.7, 0.4] }}
+            transition={{ duration: 4, repeat: Infinity }}
           />
 
-          {/* 🔥 Glow Pulse Loader */}
-          <motion.div
-            animate={{
-              scale: [1, 1.3, 1],
-              boxShadow: [
-                "0 0 10px rgba(168,85,247,0.5)",
-                "0 0 40px rgba(168,85,247,0.9)",
-                "0 0 10px rgba(168,85,247,0.5)",
-              ],
-            }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mb-8"
-          />
+          {/* ✨ Floating Particles */}
+          {isMounted && [...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-white/20 rounded-full"
+              animate={{
+                y: ["0%", "100%"],
+                x: ["0%", `${Math.random() * 100}%`],
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 3,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+            />
+          ))}
 
-          {/* ✨ Animated Text */}
-          <div className="flex gap-1 flex-wrap justify-center px-4">
+          {/* 🔮 Orbital Loader */}
+          <div className="relative mb-10">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              className="w-16 h-16 border border-purple-500/30 rounded-full"
+            />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 border border-pink-500/30 rounded-full"
+            />
+            <motion.div
+              className="absolute top-1/2 left-1/2 w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+              animate={{
+                x: [0, 20, 0, -20, 0],
+                y: [0, -20, 0, 20, 0],
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              style={{ translateX: "-50%", translateY: "-50%" }}
+            />
+          </div>
+
+          {/* 🔥 Animated Logo */}
+          <div className="relative flex gap-1 flex-wrap justify-center px-4">
             {text.map((char, i) => (
               <motion.span
                 key={i}
-                initial={{ y: 50, opacity: 0 }}
+                initial={{ y: 80, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
-                  delay: i * 0.08,
-                  duration: 0.5,
+                  delay: i * 0.06,
+                  duration: 0.6,
                   ease: "easeOut",
                 }}
-                className="text-3xl sm:text-4xl md:text-6xl font-black text-white tracking-tight"
+                className="text-4xl md:text-6xl font-black tracking-tight relative"
               >
-                {char}
+                {/* Glow */}
+                <span className="absolute inset-0 blur-lg opacity-70 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                  {char}
+                </span>
+
+                {/* Main */}
+                <span className="relative bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
+                  {char}
+                </span>
               </motion.span>
             ))}
           </div>
+
+          {/* 💡 Light Sweep */}
+          <motion.div
+            className="absolute top-1/2 w-40 h-[2px] bg-white/20 blur-md"
+            animate={{ x: ["-150%", "150%"] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
 
           {/* 📝 Tagline */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="text-slate-400 mt-4 text-sm tracking-wide"
+            transition={{ delay: 1 }}
+            className="text-slate-400 mt-6 text-sm tracking-wide"
           >
             Building the Future of Digital Presence
           </motion.p>
 
-          {/* 📊 Progress Bar */}
-          <div className="w-48 md:w-64 h-1 bg-slate-800 rounded-full mt-10 overflow-hidden relative">
+          {/* 📊 Progress */}
+          <div className="w-52 md:w-72 h-1 bg-slate-800 rounded-full mt-10 overflow-hidden">
             <motion.div
-              initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
-              transition={{ ease: "easeInOut" }}
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-pink-500"
+              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
             />
           </div>
 
-          {/* 🔢 Percentage */}
-          <motion.p className="text-xs text-slate-400 mt-3">
-            {progress}%
-          </motion.p>
+          <p className="text-xs text-slate-400 mt-3">{progress}%</p>
 
-          {/* 🎞 Noise Overlay (optional: add noise.png in public folder) */}
+          {/* 🎞 Noise */}
           <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/noise.png')]" />
         </motion.div>
       )}
