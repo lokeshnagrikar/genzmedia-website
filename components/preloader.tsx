@@ -47,8 +47,6 @@ export default function Preloader() {
     }
   }, [progress, isLoading])
 
-  const text = "GENZMEDIA".split("")
-
   return (
     <AnimatePresence>
       {isLoading && (
@@ -91,54 +89,57 @@ export default function Preloader() {
             />
           ))}
 
-          {/* 🔮 Orbital Loader */}
-          <div className="relative mb-10">
+          {/* 🔥 🎯 Unified Premium Animated Logo & Spinner */}
+          <div className="relative flex items-center justify-center mb-10">
+            {/* 🌀 Concentric Animated Rings */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              className="w-16 h-16 border border-purple-500/30 rounded-full"
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className="absolute w-44 h-44 md:w-56 md:h-56 border border-purple-500/20 rounded-full"
             />
             <motion.div
               animate={{ rotate: -360 }}
-              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 border border-pink-500/30 rounded-full"
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              className="absolute w-40 h-40 md:w-52 md:h-52 border border-pink-500/20 rounded-full border-dashed"
             />
             <motion.div
-              className="absolute top-1/2 left-1/2 w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-              animate={{
-                x: [0, 20, 0, -20, 0],
-                y: [0, -20, 0, 20, 0],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-              style={{ translateX: "-50%", translateY: "-50%" }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              className="absolute w-36 h-36 md:w-48 md:h-48 border-2 border-t-purple-500/40 border-l-transparent border-r-transparent border-b-transparent rounded-full"
             />
-          </div>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              className="absolute w-32 h-32 md:w-44 md:h-44 border-2 border-b-pink-500/40 border-l-transparent border-r-transparent border-t-transparent rounded-full"
+            />
 
-          {/* 🔥 Animated Logo */}
-          <div className="relative flex gap-1 flex-wrap justify-center px-4">
-            {text.map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ y: 80, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  delay: i * 0.06,
-                  duration: 0.6,
-                  ease: "easeOut",
-                }}
-                className="text-4xl md:text-6xl font-black tracking-tight relative"
-              >
-                {/* Glow */}
-                <span className="absolute inset-0 blur-lg opacity-70 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                  {char}
-                </span>
+            {/* Glowing Aura */}
+            <motion.div 
+              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute w-32 h-32 md:w-44 md:h-44 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+            />
 
-                {/* Main */}
-                <span className="relative bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
-                  {char}
-                </span>
-              </motion.span>
-            ))}
+            {/* Logo Container */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="relative z-10 p-4"
+            >
+              <img 
+                src="/logoo.png" 
+                alt="GENZMEDIA Logo" 
+                className="h-24 md:h-32 w-auto object-contain drop-shadow-[0_0_30px_rgba(168,85,247,0.6)]" 
+              />
+              
+              {/* Internal Pulse Shadow */}
+              <motion.div
+                animate={{ scale: [1, 1.2, 1], opacity: [0, 0.5, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 bg-white/10 rounded-full blur-xl -z-10"
+              />
+            </motion.div>
           </div>
 
           {/* 💡 Light Sweep */}

@@ -12,9 +12,11 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-12 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold gradient-text bg-gradient-to-r from-purple-400 to-pink-400 mb-3">
-              GENZMEDIA
-            </h3>
+            <img
+              src="/logoo.png"
+              alt="GENZMEDIA Logo"
+              className="h-16 w-auto object-contain mb-4 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+            />
             <p className="text-slate-400 text-sm leading-relaxed">
               Creative studio helping business owners and content creators grow with professional design, editing,
               social media management, and Meta Ads.

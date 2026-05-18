@@ -33,26 +33,19 @@ export default function Navigation() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-          ? "bg-slate-950/70 backdrop-blur-2xl border-b border-white/10 h-16"
-          : "bg-transparent h-20"
+        ? "bg-slate-950/70 backdrop-blur-2xl border-b border-white/10 h-16"
+        : "bg-transparent h-20"
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
 
         {/* 🔥 LOGO */}
-        <Link href="/" className="group relative">
-          <span className="text-2xl font-black tracking-tight relative">
-
-            {/* Glow */}
-            <span className="absolute inset-0 blur-lg opacity-60 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-              GENZMEDIA
-            </span>
-
-            {/* Animated Gradient */}
-            <span className="relative bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x group-hover:scale-110 transition">
-              GENZMEDIA
-            </span>
-          </span>
+        <Link href="/" className="group relative flex items-center">
+          <img
+            src="/logoo.png"
+            alt="GENZMEDIA Logo"
+            className="h-12 w-auto md:h-16 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+          />
         </Link>
 
         {/* 🧠 DESKTOP NAV */}
