@@ -1,7 +1,7 @@
 "use client"
 
 import { Palette, Video, Pen, Share2, TrendingUp, Code } from "lucide-react"
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { SplitText } from "./split-text"
 
 const servicesList = [
@@ -92,40 +92,78 @@ export default function Services() {
           viewport={{ once: true, margin: "-50px" }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {servicesList.map((service, index) => {
-            const Icon = service.icon
-
-            return (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700 backdrop-blur transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] cursor-pointer"
-              >
-                {/* Gradient Glow on Hover */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${service.color} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-                />
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div
-                    className={`w-12 h-12 rounded-lg bg-gradient-to-r ${service.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <Icon size={24} className="text-white" />
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
-                    {service.title}
-                  </h3>
-                  <p className="text-slate-300 text-sm leading-relaxed">{service.description}</p>
-                </div>
-              </motion.div>
-            )
-          })}
+          {servicesList.map((service, index) => (
+            <TiltCard key={index} service={service} index={index} itemVariants={itemVariants} />
+          ))}
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function TiltCard({ service, index, itemVariants }: any) {
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const mouseXSpring = useSpring(x)
+  const mouseYSpring = useSpring(y)
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  const Icon = service.icon
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{ scale: 1.02 }}
+      className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-xl transition-colors duration-300 hover:border-purple-500/50 cursor-pointer shadow-xl"
+    >
+      <div style={{ transform: "translateZ(50px)" }}>
+        {/* Gradient Glow on Hover */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${service.color} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+        />
+
+        <div className="relative z-10">
+          {/* Icon */}
+          <div
+            className={`w-14 h-14 rounded-xl bg-gradient-to-r ${service.color} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}
+          >
+            <Icon size={28} className="text-white" />
+          </div>
+
+          {/* Content */}
+          <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
+            {service.title}
+          </h3>
+          <p className="text-slate-300 text-base leading-relaxed">{service.description}</p>
+        </div>
+      </div>
+    </motion.div>
   )
 }

@@ -30,7 +30,8 @@ export default function Hero() {
     mouseY.set(clientY - top)
   }
 
-  const backgroundGradient = useMotionTemplate`radial-gradient(1000px circle at ${mouseX}px ${mouseY}px, rgba(168, 85, 247, 0.15), transparent 80%)`
+  const backgroundGradient = useMotionTemplate`radial-gradient(1200px circle at ${mouseX}px ${mouseY}px, rgba(168, 85, 247, 0.12), rgba(236, 72, 153, 0.08), transparent 80%)`
+  const spotlightGradient = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.1), transparent 100%)`
 
   if (!isMounted) return <div className="min-h-screen bg-slate-950" />
 
@@ -52,7 +53,12 @@ export default function Hero() {
       {/* Video Editing (Play Button) */}
       <motion.div style={{ y: p1 }} className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
         <motion.div
-          animate={{ y: [0, -20, 0], rotate: [5, 0, 5] }}
+          animate={{ 
+            y: [0, -20, 0], 
+            rotate: [5, 0, 5],
+            rotateX: [0, 10, 0],
+            rotateY: [0, 10, 0]
+          }}
           transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
           className="absolute top-32 right-[15%] w-24 h-24 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(236,72,153,0.15)] flex items-center justify-center pointer-events-none"
         >
@@ -64,7 +70,12 @@ export default function Hero() {
       {/* Meta Ads / Performance (TrendingUp) */}
       <motion.div style={{ y: p2 }} className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
         <motion.div
-          animate={{ y: [0, 25, 0], rotate: [-10, -5, -10] }}
+          animate={{ 
+            y: [0, 25, 0], 
+            rotate: [-10, -5, -10],
+            rotateX: [0, -5, 0],
+            rotateY: [0, 5, 0]
+          }}
           transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, delay: 1 }}
           className="absolute bottom-32 right-[20%] w-28 h-28 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full shadow-[0_0_30px_rgba(56,189,248,0.15)] flex items-center justify-center pointer-events-none"
         >
@@ -99,17 +110,21 @@ export default function Hero() {
 
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-8">
-          {/* Main Heading */}
-          <div className="mb-6 flex flex-col items-center text-center w-full">
+          {/* Main Heading with Spotlight */}
+          <div className="relative mb-6 flex flex-col items-center text-center w-full">
+            <motion.div
+              className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
+              style={{ background: spotlightGradient }}
+            />
             <SplitText 
               text="We Help Business Owners & " 
               delayBefore={0.8}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:via-pink-400 [&>span]:to-blue-400 justify-center pb-1"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:via-pink-400 [&>span]:to-blue-400 justify-center pb-1 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]"
             />
             <SplitText 
               text="Content Creators Grow" 
               delayBefore={1.1}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight text-white justify-center"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight text-white justify-center drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]"
             />
           </div>
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import MagneticButton from "./magnetic-button"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -41,39 +42,55 @@ export default function Navigation() {
 
         {/* 🔥 LOGO */}
         <Link href="/" className="group relative flex items-center">
-          <img
-            src="/logoo.png"
-            alt="GENZMEDIA Logo"
-            className="h-12 w-auto md:h-16 object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
-          />
+          <div className="relative">
+            {/* Interactive Logo Aura */}
+            <motion.div
+              className="absolute inset-[-10px] bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.15, 1],
+              }}
+              transition={{
+                rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              }}
+            />
+            
+            <img
+              src="/logoo.png"
+              alt="GENZMEDIA Logo"
+              className="relative h-12 w-auto md:h-16 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+            />
+          </div>
         </Link>
 
         {/* 🧠 DESKTOP NAV */}
-        <div className="hidden md:flex items-center gap-10 relative">
+        <div className="hidden md:flex items-center gap-6 relative">
           {navLinks.map((link, i) => (
-            <motion.a
-              key={link.href}
-              href={link.href}
-              onMouseEnter={() => setActive(i)}
-              onMouseLeave={() => setActive(null)}
-              className="relative text-sm font-semibold text-slate-300 hover:text-white transition"
-            >
-              {link.label}
-
-              {/* 🔥 Hover underline (Stripe style) */}
-              <AnimatePresence>
-                {active === i && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500"
-                    initial={{ opacity: 0, scaleX: 0.5 }}
-                    animate={{ opacity: 1, scaleX: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-              </AnimatePresence>
-            </motion.a>
+            <MagneticButton key={link.href} className="px-3 py-2">
+              <motion.a
+                href={link.href}
+                onMouseEnter={() => setActive(i)}
+                onMouseLeave={() => setActive(null)}
+                className="relative text-sm font-semibold text-slate-300 hover:text-white transition whitespace-nowrap"
+              >
+                {link.label}
+  
+                {/* 🔥 Hover underline (Stripe style) */}
+                <AnimatePresence>
+                  {active === i && (
+                    <motion.div
+                      layoutId="nav-underline"
+                      className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500"
+                      initial={{ opacity: 0, scaleX: 0.5 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.a>
+            </MagneticButton>
           ))}
         </div>
 
