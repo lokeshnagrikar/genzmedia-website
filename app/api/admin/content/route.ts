@@ -46,10 +46,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Missing content payload" }, { status: 400 })
     }
 
-    // Preserve existing adminPin if not explicitly updated
+    // Preserve existing adminPin and set update timestamp
     const finalContent: SiteContent = {
       ...newContent,
       adminPin: newContent.adminPin || currentPin,
+      _updatedAt: Date.now(),
     }
 
     await writeSiteContentAsync(finalContent)

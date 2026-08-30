@@ -164,7 +164,7 @@ export default function AdminPage() {
       })
       const data = await res.json()
       if (data.success) {
-        notifyContentUpdated()
+        notifyContentUpdated(payloadContent)
         setSaveStatus("Changes instantly saved & published live across the web!")
         if (newPin) setNewPin("")
         setTimeout(() => setSaveStatus(null), 4000)

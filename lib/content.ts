@@ -64,6 +64,7 @@ export interface ContactConfig {
 }
 
 export interface SiteContent {
+  _updatedAt?: number
   adminPin: string
   hero: HeroConfig
   portfolio: PortfolioItem[]
