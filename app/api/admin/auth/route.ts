@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server"
-import { readSiteContent } from "@/lib/content-server"
+import { readSiteContentAsync } from "@/lib/content-server"
+
+export const dynamic = "force-dynamic"
 
 export async function POST(request: Request) {
   try {
     const { pin } = await request.json()
-    const content = readSiteContent()
+    const content = await readSiteContentAsync()
     const validPin = content.adminPin || "2424"
 
     if (pin && pin.trim() === validPin.trim()) {

@@ -169,8 +169,8 @@ export default function Preloader() {
 
           <p className="text-xs text-slate-400 mt-3">{progress}%</p>
 
-          {/* 🎞 Noise */}
-          <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/noise.png')]" />
+          {/* 🎞 Subtle Ambient Grid Overlay */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
         </motion.div>
       )}
     </AnimatePresence>

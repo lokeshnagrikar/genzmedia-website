@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { readSiteContent, writeSiteContent } from "@/lib/content-server"
+import { readSiteContentAsync, writeSiteContentAsync } from "@/lib/content-server"
 import { SiteContent } from "@/lib/content"
 
 export const dynamic = "force-dynamic"
@@ -8,7 +8,7 @@ export const revalidate = 0
 // GET latest content (Public & Admin)
 export async function GET() {
   try {
-    const content = readSiteContent()
+    const content = await readSiteContentAsync()
     // Do not leak admin pin on public GET
     const { adminPin: _pin, ...publicContent } = content
     return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const { token, content: newContent } = body as { token?: string; content: SiteContent }
 
     // Read current content to verify pin
-    const current = readSiteContent()
+    const current = await readSiteContentAsync()
     const currentPin = current.adminPin || "2424"
 
     // Basic token validation (contains admin prefix)
@@ -52,19 +52,16 @@ export async function POST(request: Request) {
       adminPin: newContent.adminPin || currentPin,
     }
 
-    const success = writeSiteContent(finalContent)
-    if (success) {
-      return NextResponse.json(
-        { success: true, message: "Content updated and published successfully!" },
-        {
-          headers: {
-            "Cache-Control": "no-store, max-age=0",
-          },
-        }
-      )
-    } else {
-      return NextResponse.json({ success: false, message: "Failed to write file" }, { status: 500 })
-    }
+    await writeSiteContentAsync(finalContent)
+
+    return NextResponse.json(
+      { success: true, message: "Content updated and published successfully!" },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      }
+    )
   } catch (error) {
     console.error("Error in POST /api/admin/content:", error)
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 })
