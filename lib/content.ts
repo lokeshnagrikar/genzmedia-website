@@ -1,0 +1,302 @@
+export interface AvailabilityConfig {
+  active: boolean
+  text: string
+  link: string
+}
+
+export interface StatItem {
+  emoji: string
+  value: string
+  label: string
+  desc: string
+  gradient?: string
+  border?: string
+  textGradient?: string
+}
+
+export interface HeroConfig {
+  availability: AvailabilityConfig
+  showreelUrl: string
+  showreelId: string
+  stats: StatItem[]
+}
+
+export interface PortfolioItem {
+  id: string
+  client: string
+  title: string
+  subtitle: string
+  metric: string
+  tag: string
+  url: string
+  thumbnail: string
+  accent?: string
+  badgeColor?: string
+}
+
+export interface ServiceItem {
+  id: string
+  iconName: string
+  title: string
+  description: string
+  color: string
+}
+
+export interface TeamMemberItem {
+  id: string
+  name: string
+  role: string
+  instagram: string
+  image: string
+  color: string
+  isFounder?: boolean
+}
+
+export interface InstagramContact {
+  handle: string
+  url: string
+}
+
+export interface ContactConfig {
+  phones: string[]
+  emails: string[]
+  instagram: InstagramContact[]
+}
+
+export interface SiteContent {
+  adminPin: string
+  hero: HeroConfig
+  portfolio: PortfolioItem[]
+  services: ServiceItem[]
+  team: {
+    founders: TeamMemberItem[]
+    members: TeamMemberItem[]
+  }
+  contact: ContactConfig
+}
+
+export function getInitialDefaultContent(): SiteContent {
+  return {
+    adminPin: "2424",
+    hero: {
+      availability: {
+        active: true,
+        text: "Taking on 2 New Client Projects for This Month",
+        link: "#contact",
+      },
+      showreelUrl: "https://www.instagram.com/reel/DapY6qrO-V3/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
+      showreelId: "DapY6qrO-V3",
+      stats: [
+        {
+          emoji: "🔥",
+          value: "2.5M+",
+          label: "Views Generated",
+          desc: "Organic reach & impact",
+          gradient: "from-amber-500/20 via-orange-500/10 to-transparent",
+          border: "border-orange-500/30",
+          textGradient: "from-amber-400 to-orange-400",
+        },
+        {
+          emoji: "🎬",
+          value: "350+",
+          label: "Videos & Reels",
+          desc: "Edited with clean pacing",
+          gradient: "from-purple-500/20 via-pink-500/10 to-transparent",
+          border: "border-purple-500/30",
+          textGradient: "from-purple-400 to-pink-400",
+        },
+        {
+          emoji: "📈",
+          value: "4.2x",
+          label: "Average CTR",
+          desc: "On custom thumbnails",
+          gradient: "from-blue-500/20 via-cyan-500/10 to-transparent",
+          border: "border-cyan-500/30",
+          textGradient: "from-cyan-400 to-blue-400",
+        },
+        {
+          emoji: "⭐",
+          value: "98%",
+          label: "Client Retention",
+          desc: "Long-term brand partners",
+          gradient: "from-pink-500/20 via-rose-500/10 to-transparent",
+          border: "border-rose-500/30",
+          textGradient: "from-pink-400 to-rose-400",
+        },
+      ],
+    },
+    portfolio: [
+      {
+        id: "DcaPlnXJQP_",
+        client: "Little Flowers School",
+        title: "Brand Storytelling",
+        subtitle: "Teachers Day Tribute & Brand Narrative",
+        metric: "50K+ Organic Views",
+        tag: "Brand Film",
+        url: "https://www.instagram.com/reel/DcaPlnXJQP_/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
+        thumbnail: "/insta-reel1.png",
+        accent: "from-violet-500 via-fuchsia-500 to-pink-500",
+        badgeColor: "bg-fuchsia-500/20 border-fuchsia-500/40 text-fuchsia-300",
+      },
+      {
+        id: "DapY6qrO-V3",
+        client: "Little Flowers School",
+        title: "Student Life & POV",
+        subtitle: "High-Energy Campus Culture Reel",
+        metric: "80K+ Views",
+        tag: "Viral POV",
+        url: "https://www.instagram.com/reel/DapY6qrO-V3/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
+        thumbnail: "/insta-reel2.png",
+        accent: "from-blue-500 to-purple-500",
+        badgeColor: "bg-blue-500/20 border-blue-500/40 text-blue-300",
+      },
+      {
+        id: "DcSX3evBOXd",
+        client: "Acute Public School",
+        title: "Earth Day Campaign",
+        subtitle: "Environmental Changemakers Showcase",
+        metric: "45K+ Reach",
+        tag: "Eco & Community",
+        url: "https://www.instagram.com/reel/DcSX3evBOXd/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
+        thumbnail: "/insta-reel3.png",
+        accent: "from-emerald-500 to-cyan-500",
+        badgeColor: "bg-emerald-500/20 border-emerald-500/40 text-emerald-300",
+      },
+      {
+        id: "DYq3ClSNWpF",
+        client: "Acute Public School",
+        title: "2026 Admissions Campaign",
+        subtitle: "Performance Growth & Lead Generation",
+        metric: "120+ Leads Generated",
+        tag: "Performance Ads",
+        url: "https://www.instagram.com/reel/DYq3ClSNWpF/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
+        thumbnail: "/insta-reel4.png",
+        accent: "from-rose-500 to-amber-500",
+        badgeColor: "bg-rose-500/20 border-rose-500/40 text-rose-300",
+      },
+    ],
+    services: [
+      {
+        id: "srv-1",
+        iconName: "Palette",
+        title: "Graphic Designing",
+        description: "Clean, modern designs to help your brand look credible and professional across all platforms",
+        color: "from-violet-600 to-fuchsia-600",
+      },
+      {
+        id: "srv-2",
+        iconName: "Video",
+        title: "Thumbnail Design",
+        description: "High-quality thumbnails that grab attention and look premium, perfect for YouTube, Reels, Shorts",
+        color: "from-fuchsia-600 to-pink-500",
+      },
+      {
+        id: "srv-3",
+        iconName: "Pen",
+        title: "Video Editing",
+        description: "Professional editing with clean cuts, smooth flow, and strong pacing for short and long-form content",
+        color: "from-pink-600 to-amber-500",
+      },
+      {
+        id: "srv-4",
+        iconName: "Share2",
+        title: "Social Media Management",
+        description: "Content planning, consistent posting, visual consistency, and professional presentation",
+        color: "from-amber-500 to-rose-500",
+      },
+      {
+        id: "srv-5",
+        iconName: "TrendingUp",
+        title: "Meta Ads Management",
+        description: "Result-focused campaigns with ad creative design, audience targeting, and ethical brand-safe advertising",
+        color: "from-cyan-500 to-violet-600",
+      },
+      {
+        id: "srv-6",
+        iconName: "Code",
+        title: "Website Development",
+        description: "High-performance, beautifully animated custom websites tailored to scale your brand",
+        color: "from-violet-600 to-cyan-500",
+      },
+    ],
+    team: {
+      founders: [
+        {
+          id: "fnd-1",
+          name: "Sahil Kamdi",
+          role: "Founder",
+          instagram: "https://www.instagram.com/sahilkamdi_",
+          color: "from-amber-400 to-rose-500",
+          image: "/sahil.png",
+          isFounder: true,
+        },
+        {
+          id: "fnd-2",
+          name: "Navin Bankar",
+          role: "Co-Founder",
+          instagram: "https://www.instagram.com/navin____24k",
+          color: "from-rose-500 via-fuchsia-600 to-violet-600",
+          image: "/navin.png",
+          isFounder: true,
+        },
+      ],
+      members: [
+        {
+          id: "tm-1",
+          name: "Rohan Sahare",
+          role: "Meta Expert",
+          instagram: "https://www.instagram.com/etz.rohan",
+          color: "from-cyan-500 to-blue-600",
+          image: "/rohan.png",
+        },
+        {
+          id: "tm-2",
+          name: "Jaya Kharwade",
+          role: "Graphics Designer",
+          instagram: "https://www.instagram.com/jaya__0403",
+          color: "from-violet-500 to-fuchsia-500",
+          image: "/jaya.png",
+        },
+        {
+          id: "tm-3",
+          name: "Palak Bankar",
+          role: "Influencer",
+          instagram: "https://www.instagram.com/infowithpallu",
+          color: "from-fuchsia-500 to-rose-500",
+          image: "/palak.png",
+        },
+        {
+          id: "tm-4",
+          name: "Jitesh Katankar",
+          role: "Video Creator",
+          instagram: "https://www.instagram.com/createwith_jit?igsh=dTg4am1wenJodXZt",
+          color: "from-amber-500 to-orange-600",
+          image: "/jitesh.png",
+        },
+        {
+          id: "tm-5",
+          name: "Lokesh Nagrikar",
+          role: "Web Developer",
+          instagram: "https://www.instagram.com/hey.__ritik/",
+          color: "from-violet-600 to-cyan-500",
+          image: "/lokesh.png",
+        },
+      ],
+    },
+    contact: {
+      phones: ["+91 82370 20562", "+91 82618 99351"],
+      emails: ["sahilkamdi414@gmail.com", "navinbankar1788@gmail.com"],
+      instagram: [
+        { handle: "@navin____24k", url: "https://www.instagram.com/navin____24k" },
+        { handle: "@sahilkamdi_", url: "https://www.instagram.com/sahilkamdi_" },
+      ],
+    },
+  }
+}
+
+// Utility to extract Reel / Post ID from any Instagram URL (browser & server safe)
+export function extractInstagramId(url: string): string {
+  if (!url) return ""
+  const match = url.match(/(?:reel|p)\/([A-Za-z0-9_-]+)/)
+  return match ? match[1] : url.trim()
+}

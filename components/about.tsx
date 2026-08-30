@@ -30,7 +30,7 @@ export default function About() {
   }
 
   return (
-    <section id="about" className="relative py-20 md:py-32 bg-slate-950 border-t border-slate-800 overflow-hidden">
+    <section id="about" className="relative py-20 md:py-32 bg-[#08090E] border-t border-slate-800/80 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Column */}
@@ -42,7 +42,7 @@ export default function About() {
           >
             <SplitText 
               text="Who We Are" 
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:to-pink-400 pb-2 justify-start"
+              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 pb-2 justify-start drop-shadow-[0_0_25px_rgba(255,46,147,0.3)]"
             />
             <p className="text-lg text-slate-300 mb-8 leading-relaxed">
               GENZMEDIA is a modern creative brand built for today's digital world. We work with business owners and
@@ -64,7 +64,7 @@ export default function About() {
                   variants={itemVariants}
                   className="flex items-center gap-3"
                 >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 flex items-center justify-center shadow-md shadow-fuchsia-500/20">
                     <Check size={16} className="text-white" />
                   </div>
                   <span className="text-slate-300 text-lg">{value}</span>
@@ -80,11 +80,11 @@ export default function About() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+            <div className="bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur-md shadow-2xl relative overflow-hidden group">
               {/* Subtle background glow */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -z-10 group-hover:bg-purple-500/20 transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-fuchsia-500/10 rounded-full blur-3xl -z-10 group-hover:bg-fuchsia-500/20 transition-colors duration-500" />
               
-              <h3 className="text-2xl font-bold mb-6 gradient-text bg-gradient-to-r from-blue-400 to-purple-400">
+              <h3 className="text-2xl font-bold mb-6 gradient-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
                 Our Mindset
               </h3>
               <motion.div 
@@ -99,7 +99,7 @@ export default function About() {
                     key={index}
                     variants={rightItemVariants}
                     whileHover={{ scale: 1.02, x: 5 }}
-                    className="p-4 rounded-xl bg-slate-800/50 border border-slate-700 transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] cursor-default"
+                    className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 transition-all duration-300 hover:border-fuchsia-500/50 hover:shadow-[0_0_20px_rgba(255,46,147,0.2)] cursor-default"
                   >
                     <p className="text-slate-200 font-medium">{item}</p>
                   </motion.div>
