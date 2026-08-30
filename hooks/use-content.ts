@@ -69,8 +69,8 @@ export function useContent() {
 
         const serverTimestamp = serverData._updatedAt || 0
 
-        // If local timestamp is significantly newer than server data (e.g. serverless cold start static fallback), preserve local
-        if (localTimestamp && serverTimestamp && localTimestamp > serverTimestamp) {
+        // If local timestamp is newer than server data (e.g. serverless cold start static fallback), preserve local
+        if (localTimestamp && localTimestamp > serverTimestamp) {
           // Keep local state
           return
         }

@@ -13,16 +13,16 @@ declare global {
 function getCloudKVCredentials(): { url?: string; token?: string } {
   // 1. Check exact matches
   let url =
-    process.env.STORAGE_REST_API_URL ||
-    process.env.UPSTASH_REDIS_REST_URL ||
     process.env.KV_REST_API_URL ||
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.STORAGE_REST_API_URL ||
     process.env.STORAGE_UPSTASH_REDIS_REST_URL ||
     process.env.REDIS_URL
 
   let token =
-    process.env.STORAGE_REST_API_TOKEN ||
-    process.env.UPSTASH_REDIS_REST_TOKEN ||
     process.env.KV_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.STORAGE_REST_API_TOKEN ||
     process.env.STORAGE_UPSTASH_REDIS_REST_TOKEN ||
     process.env.REDIS_TOKEN
 
@@ -41,21 +41,28 @@ function getCloudKVCredentials(): { url?: string; token?: string } {
   return { url, token }
 }
 
-// 1. Upstash Redis / Vercel KV REST helper (Zero-package dependency)
+// 1. Upstash Redis / Vercel KV REST helper (Official Upstash Redis REST Command format)
 async function fetchCloudKV(): Promise<SiteContent | null> {
   const { url: kvUrl, token: kvToken } = getCloudKVCredentials()
 
   if (!kvUrl || !kvToken) return null
 
   try {
-    const res = await fetch(`${kvUrl}/get/genz_site_content`, {
-      headers: { Authorization: `Bearer ${kvToken}` },
+    const res = await fetch(`${kvUrl}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${kvToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(["GET", "genz_site_content"]),
       cache: "no-store",
     })
     const data = await res.json()
     if (data && data.result) {
       const parsed = typeof data.result === "string" ? JSON.parse(data.result) : data.result
-      return parsed as SiteContent
+      if (parsed && typeof parsed === "object" && parsed.hero) {
+        return parsed as SiteContent
+      }
     }
   } catch (err) {
     console.error("Cloud KV fetch error:", err)
@@ -69,23 +76,24 @@ async function saveCloudKV(content: SiteContent): Promise<boolean> {
   if (!kvUrl || !kvToken) return false
 
   try {
-    const res = await fetch(`${kvUrl}/set/genz_site_content`, {
+    const rawString = JSON.stringify(content)
+    const res = await fetch(`${kvUrl}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${kvToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(content),
+      body: JSON.stringify(["SET", "genz_site_content", rawString]),
     })
     const data = await res.json()
-    return data && data.result === "OK"
+    return !!data && (data.result === "OK" || data.result === true || typeof data.result === "string")
   } catch (err) {
     console.error("Cloud KV save error:", err)
     return false
   }
 }
 
-// 2. GitHub API Auto-Commit Sync (Optional: If GITHUB_TOKEN is set in Vercel)
+// 2. GitHub API Auto-Commit Sync (Optional fallback)
 async function syncToGitHub(content: SiteContent): Promise<boolean> {
   const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
   const repo = process.env.GITHUB_REPO || "lokeshnagrikar/genzmedia-website"
@@ -134,19 +142,19 @@ async function syncToGitHub(content: SiteContent): Promise<boolean> {
 
 // 3. Read Site Content (Multi-tier resilient fallback)
 export async function readSiteContentAsync(): Promise<SiteContent> {
-  // Check Cloud KV first
+  // 1. Check Cloud KV (Upstash Redis) first
   const cloudData = await fetchCloudKV()
   if (cloudData) {
     globalThis.__genz_content = cloudData
     return cloudData
   }
 
-  // Check In-Memory
+  // 2. Check In-Memory
   if (globalThis.__genz_content) {
     return globalThis.__genz_content
   }
 
-  // Check /tmp file (Writable on Vercel Lambdas)
+  // 3. Check /tmp file (Writable on Vercel Lambdas)
   try {
     if (fs.existsSync(tmpContentPath)) {
       const raw = fs.readFileSync(tmpContentPath, "utf8")
@@ -156,7 +164,7 @@ export async function readSiteContentAsync(): Promise<SiteContent> {
     }
   } catch {}
 
-  // Check Local data/content.json
+  // 4. Check Local data/content.json
   try {
     if (fs.existsSync(localContentPath)) {
       const raw = fs.readFileSync(localContentPath, "utf8")
@@ -205,22 +213,20 @@ export async function writeSiteContentAsync(newContent: SiteContent): Promise<bo
   // Update in-memory
   globalThis.__genz_content = newContent
 
-  // 1. Try writing to local repo path
+  // 1. Save to Cloud KV (Upstash Redis)
+  await saveCloudKV(newContent)
+
+  // 2. Try writing to local repo path (local dev & VPS)
   try {
     fs.mkdirSync(path.dirname(localContentPath), { recursive: true })
     fs.writeFileSync(localContentPath, JSON.stringify(newContent, null, 2), "utf8")
-  } catch {
-    // Expected on Vercel read-only lambda filesystem
-  }
+  } catch {}
 
-  // 2. Try writing to /tmp (Always writable on Vercel lambdas)
+  // 3. Try writing to /tmp (Vercel Lambdas)
   try {
     fs.mkdirSync(path.dirname(tmpContentPath), { recursive: true })
     fs.writeFileSync(tmpContentPath, JSON.stringify(newContent, null, 2), "utf8")
   } catch {}
-
-  // 3. Save to Cloud KV if available
-  await saveCloudKV(newContent)
 
   // 4. Save to GitHub if token available
   syncToGitHub(newContent).catch(() => {})
