@@ -1,50 +1,27 @@
 "use client"
 
-import { Palette, Video, Pen, Share2, TrendingUp, Code } from "lucide-react"
+import { Palette, Video, Pen, Share2, TrendingUp, Code, Sparkles, Zap, Flame, Globe, LucideIcon } from "lucide-react"
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { SplitText } from "./split-text"
+import { useContent } from "@/hooks/use-content"
+import { ServiceItem } from "@/lib/content"
 
-const servicesList = [
-  {
-    icon: Palette,
-    title: "Graphic Designing",
-    description: "Clean, modern designs to help your brand look credible and professional across all platforms",
-    color: "from-purple-600 to-pink-600",
-  },
-  {
-    icon: Video,
-    title: "Thumbnail Design",
-    description: "High-quality thumbnails that grab attention and look premium, perfect for YouTube, Reels, Shorts",
-    color: "from-blue-600 to-purple-600",
-  },
-  {
-    icon: Pen,
-    title: "Video Editing",
-    description: "Professional editing with clean cuts, smooth flow, and strong pacing for short and long-form content",
-    color: "from-pink-600 to-orange-600",
-  },
-  {
-    icon: Share2,
-    title: "Social Media Management",
-    description: "Content planning, consistent posting, visual consistency, and professional presentation",
-    color: "from-orange-600 to-pink-600",
-  },
-  {
-    icon: TrendingUp,
-    title: "Meta Ads Management",
-    description:
-      "Result-focused campaigns with ad creative design, audience targeting, and ethical brand-safe advertising",
-    color: "from-cyan-600 to-blue-600",
-  },
-  {
-    icon: Code,
-    title: "Website Development",
-    description: "High-performance, beautifully animated custom websites tailored to scale your brand",
-    color: "from-indigo-600 to-purple-600",
-  },
-]
+const iconMap: Record<string, LucideIcon> = {
+  Palette,
+  Video,
+  Pen,
+  Share2,
+  TrendingUp,
+  Code,
+  Sparkles,
+  Zap,
+  Flame,
+  Globe,
+}
 
 export default function Services() {
+  const { services } = useContent()
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -59,41 +36,44 @@ export default function Services() {
     hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.6 } 
+      y: 0,
+      transition: {
+        duration: 0.6,
+      }
     },
   }
 
   return (
-    <section id="services" className="relative py-20 md:py-32 bg-slate-950 border-t border-slate-800">
+    <section id="services" className="relative py-20 md:py-32 bg-[#08090E] border-t border-slate-800/80">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        
+        {/* Section Header with SplitText */}
         <div className="text-center mb-16">
           <SplitText 
-            text="What We Do" 
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-purple-400 [&>span]:via-pink-400 [&>span]:to-blue-400 pb-2 justify-center"
+            text="What We Do Best"
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 pb-2 justify-center drop-shadow-[0_0_25px_rgba(255,46,147,0.3)]"
           />
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl text-slate-300 max-w-2xl mx-auto"
+            className="text-lg text-slate-300 max-w-2xl mx-auto"
           >
-            Comprehensive creative services designed to help your brand stand out and grow
+            We focus on services that create measurable impact for your brand and content.
           </motion.p>
         </div>
 
-        {/* Service Cards */}
-        <motion.div 
+        {/* Services Grid with 3D Tilt Cards */}
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {servicesList.map((service, index) => (
-            <TiltCard key={index} service={service} index={index} itemVariants={itemVariants} />
+          {services?.map((service, index) => (
+            <TiltCard key={service.id || index} service={service} index={index} itemVariants={itemVariants} />
           ))}
         </motion.div>
       </div>
@@ -101,7 +81,7 @@ export default function Services() {
   )
 }
 
-function TiltCard({ service, index, itemVariants }: any) {
+function TiltCard({ service, index, itemVariants }: { service: ServiceItem; index: number; itemVariants: any }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -128,7 +108,7 @@ function TiltCard({ service, index, itemVariants }: any) {
     y.set(0)
   }
 
-  const Icon = service.icon
+  const Icon = iconMap[service.iconName] || Sparkles
 
   return (
     <motion.div
@@ -141,24 +121,24 @@ function TiltCard({ service, index, itemVariants }: any) {
         transformStyle: "preserve-3d",
       }}
       whileHover={{ scale: 1.02 }}
-      className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-xl transition-colors duration-300 hover:border-purple-500/50 cursor-pointer shadow-xl"
+      className="group relative bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur-xl transition-all duration-300 hover:border-fuchsia-500/60 cursor-pointer shadow-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.25)]"
     >
       <div style={{ transform: "translateZ(50px)" }}>
         {/* Gradient Glow on Hover */}
         <div
-          className={`absolute inset-0 bg-gradient-to-r ${service.color} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+          className={`absolute inset-0 bg-gradient-to-r ${service.color || "from-violet-600 to-fuchsia-600"} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
         />
 
         <div className="relative z-10">
           {/* Icon */}
           <div
-            className={`w-14 h-14 rounded-xl bg-gradient-to-r ${service.color} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}
+            className={`w-14 h-14 rounded-xl bg-gradient-to-r ${service.color || "from-violet-600 to-fuchsia-600"} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}
           >
             <Icon size={28} className="text-white" />
           </div>
 
           {/* Content */}
-          <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
+          <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-all duration-300">
             {service.title}
           </h3>
           <p className="text-slate-300 text-base leading-relaxed">{service.description}</p>

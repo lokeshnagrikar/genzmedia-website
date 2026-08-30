@@ -34,7 +34,7 @@ export default function Navigation() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-        ? "bg-slate-950/70 backdrop-blur-2xl border-b border-white/10 h-16"
+        ? "bg-[#08090E]/85 backdrop-blur-2xl border-b border-slate-800/80 h-16"
         : "bg-transparent h-20"
         }`}
     >
@@ -45,7 +45,7 @@ export default function Navigation() {
           <div className="relative">
             {/* Interactive Logo Aura */}
             <motion.div
-              className="absolute inset-[-10px] bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"
+              className="absolute inset-[-10px] bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-500 rounded-full blur-2xl opacity-0 group-hover:opacity-75 transition-opacity duration-500"
               animate={{
                 rotate: [0, 360],
                 scale: [1, 1.15, 1],
@@ -59,7 +59,7 @@ export default function Navigation() {
             <img
               src="/logoo.png"
               alt="GENZMEDIA Logo"
-              className="relative h-12 w-auto md:h-16 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+              className="relative h-12 w-auto md:h-16 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(255,46,147,0.5)]"
             />
           </div>
         </Link>
@@ -76,12 +76,12 @@ export default function Navigation() {
               >
                 {link.label}
   
-                {/* 🔥 Hover underline (Stripe style) */}
+                {/* 🔥 Hover underline */}
                 <AnimatePresence>
                   {active === i && (
                     <motion.div
                       layoutId="nav-underline"
-                      className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500"
+                      className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500"
                       initial={{ opacity: 0, scaleX: 0.5 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       exit={{ opacity: 0 }}
@@ -99,7 +99,7 @@ export default function Navigation() {
           href="#contact"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="hidden md:inline-flex items-center px-6 py-2.5 rounded-xl text-white font-bold bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/20 hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] transition-all"
+          className="hidden md:inline-flex items-center px-6 py-2.5 rounded-xl text-white font-bold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 shadow-lg shadow-fuchsia-500/20 hover:shadow-[0_0_30px_rgba(255,46,147,0.5)] transition-all cursor-pointer border border-pink-400/30"
         >
           Get Started
         </motion.a>
@@ -118,7 +118,7 @@ export default function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-slate-950/95 backdrop-blur-2xl border-t border-white/10"
+            className="md:hidden bg-[#08090E]/95 backdrop-blur-2xl border-t border-slate-800"
           >
             <div className="flex flex-col px-6 py-6 space-y-4">
               {navLinks.map((link, i) => (
@@ -140,7 +140,7 @@ export default function Navigation() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4 text-center py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold"
+                className="mt-4 text-center py-3 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white font-bold"
               >
                 Get Started
               </motion.a>
