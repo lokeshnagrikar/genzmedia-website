@@ -10,10 +10,40 @@ declare global {
   var __genz_content: SiteContent | undefined
 }
 
+function getCloudKVCredentials(): { url?: string; token?: string } {
+  // 1. Check exact matches
+  let url =
+    process.env.STORAGE_REST_API_URL ||
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.KV_REST_API_URL ||
+    process.env.STORAGE_UPSTASH_REDIS_REST_URL ||
+    process.env.REDIS_URL
+
+  let token =
+    process.env.STORAGE_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.KV_REST_API_TOKEN ||
+    process.env.STORAGE_UPSTASH_REDIS_REST_TOKEN ||
+    process.env.REDIS_TOKEN
+
+  // 2. Dynamic prefix search (fallback)
+  if (!url || !token) {
+    for (const key in process.env) {
+      if (key.endsWith("_REST_API_URL") && !url) {
+        url = process.env[key]
+      }
+      if (key.endsWith("_REST_API_TOKEN") && !token) {
+        token = process.env[key]
+      }
+    }
+  }
+
+  return { url, token }
+}
+
 // 1. Upstash Redis / Vercel KV REST helper (Zero-package dependency)
 async function fetchCloudKV(): Promise<SiteContent | null> {
-  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
-  const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
+  const { url: kvUrl, token: kvToken } = getCloudKVCredentials()
 
   if (!kvUrl || !kvToken) return null
 
@@ -34,8 +64,7 @@ async function fetchCloudKV(): Promise<SiteContent | null> {
 }
 
 async function saveCloudKV(content: SiteContent): Promise<boolean> {
-  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
-  const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
+  const { url: kvUrl, token: kvToken } = getCloudKVCredentials()
 
   if (!kvUrl || !kvToken) return false
 
