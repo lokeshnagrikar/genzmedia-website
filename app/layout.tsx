@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`font-sans antialiased bg-slate-950 text-white cursor-auto md:cursor-none`}>
+      <body className={`font-sans antialiased bg-[#07080B] text-white cursor-auto md:cursor-none`}>
         <SmoothScroll>
           <Preloader />
           <ParticlesBg />

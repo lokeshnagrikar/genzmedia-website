@@ -20,7 +20,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="bg-slate-950 text-white overflow-x-hidden">
+    <main className="bg-[#07080B] text-white overflow-x-hidden">
       <Navigation />
       {isVisible && (
         <>

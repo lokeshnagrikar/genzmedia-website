@@ -111,7 +111,7 @@ export default function AdminPage() {
               setContent((prev) => ({ ...prev, ...localCache }))
             }
           }
-        } catch {}
+        } catch { }
       }
 
       const res = await fetch(`/api/admin/content?t=${Date.now()}`, { cache: "no-store" })
@@ -527,7 +527,7 @@ export default function AdminPage() {
             <div>
               <input
                 type="password"
-                placeholder="Enter Passcode (Default: 2424)"
+                placeholder="Enter Passcode: ****"
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 className="w-full px-5 py-3.5 rounded-xl bg-slate-950/90 border border-slate-700 focus:border-fuchsia-500 focus:outline-none text-white text-center tracking-widest text-lg font-bold placeholder:text-slate-600 transition-colors"
@@ -637,11 +637,10 @@ export default function AdminPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
-                className={`flex items-center gap-2 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? "border-fuchsia-500 text-white bg-fuchsia-500/10"
-                    : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50"
-                }`}
+                className={`flex items-center gap-2 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer ${isActive
+                  ? "border-fuchsia-500 text-white bg-fuchsia-500/10"
+                  : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/50"
+                  }`}
               >
                 <Icon size={16} className={isActive ? "text-pink-400" : "text-slate-400"} />
                 <span>{tab.label}</span>
@@ -658,11 +657,10 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className={`fixed top-20 right-6 z-50 px-5 py-3 rounded-2xl backdrop-blur-xl border shadow-2xl flex items-center gap-3 text-sm font-bold ${
-              saveStatus.includes("saved")
-                ? "bg-emerald-950/95 border-emerald-500/50 text-emerald-200 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
-                : "bg-rose-950/95 border-rose-500/50 text-rose-200 shadow-[0_0_30px_rgba(244,63,94,0.3)]"
-            }`}
+            className={`fixed top-20 right-6 z-50 px-5 py-3 rounded-2xl backdrop-blur-xl border shadow-2xl flex items-center gap-3 text-sm font-bold ${saveStatus.includes("saved")
+              ? "bg-emerald-950/95 border-emerald-500/50 text-emerald-200 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+              : "bg-rose-950/95 border-rose-500/50 text-rose-200 shadow-[0_0_30px_rgba(244,63,94,0.3)]"
+              }`}
           >
             {saveStatus.includes("saved") ? (
               <CheckCircle2 size={18} className="text-emerald-400" />
@@ -676,7 +674,7 @@ export default function AdminPage() {
 
       {/* 📄 Main Content Area */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        
+
         {/* ============================================================ */}
         {/* TAB 1: PORTFOLIO & REELS CRUD */}
         {/* ============================================================ */}

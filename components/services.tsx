@@ -1,8 +1,8 @@
 "use client"
 
-import { Palette, Video, Pen, Share2, TrendingUp, Code, Sparkles, Zap, Flame, Globe, LucideIcon } from "lucide-react"
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { SplitText } from "./split-text"
+import { useState } from "react"
+import { Palette, Video, Pen, Share2, TrendingUp, Code, Sparkles, Zap, Flame, Globe, ArrowUpRight, CheckCircle2, LucideIcon } from "lucide-react"
+import { motion } from "framer-motion"
 import { useContent } from "@/hooks/use-content"
 import { ServiceItem } from "@/lib/content"
 
@@ -19,131 +19,134 @@ const iconMap: Record<string, LucideIcon> = {
   Globe,
 }
 
-export default function Services() {
-  const { services } = useContent()
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.6,
-      }
-    },
-  }
-
-  return (
-    <section id="services" className="relative py-20 md:py-32 bg-[#08090E] border-t border-slate-800/80">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header with SplitText */}
-        <div className="text-center mb-16">
-          <SplitText 
-            text="What We Do Best"
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 pb-2 justify-center drop-shadow-[0_0_25px_rgba(255,46,147,0.3)]"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-slate-300 max-w-2xl mx-auto"
-          >
-            We focus on services that create measurable impact for your brand and content.
-          </motion.p>
-        </div>
-
-        {/* Services Grid with 3D Tilt Cards */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {services?.map((service, index) => (
-            <TiltCard key={service.id || index} service={service} index={index} itemVariants={itemVariants} />
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  )
+// Deliverable tags for creative media agency credibility
+const serviceTags: Record<string, string[]> = {
+  "Graphic Designing": ["Brand Identity", "Carousels", "Typography", "Visual System"],
+  "Thumbnail Design": ["CTR Psychology", "High Contrast", "Face Enhancements", "A/B Variants"],
+  "Video Editing": ["Hook Design", "DaVinci Color Grade", "Sound FX & Foley", "Pacing & Retention"],
+  "Social Media Management": ["Content Strategy", "Grid Cohesion", "Viral Scheduling", "Analytics"],
+  "Meta Ads Management": ["ROAS Scaling", "Ad Creatives", "Audience Targeting", "Conversion Funnels"],
+  "Website Development": ["Next.js & React", "High Performance", "Cinematic Animations", "SEO Ready"],
 }
 
-function TiltCard({ service, index, itemVariants }: { service: ServiceItem; index: number; itemVariants: any }) {
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  const mouseXSpring = useSpring(x)
-  const mouseYSpring = useSpring(y)
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"])
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-    const xPct = mouseX / width - 0.5
-    const yPct = mouseY / height - 0.5
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0)
-    y.set(0)
-  }
-
-  const Icon = iconMap[service.iconName] || Sparkles
+export default function Services() {
+  const { services } = useContent()
+  const [activeIdx, setActiveIdx] = useState<number>(0)
 
   return (
-    <motion.div
-      variants={itemVariants}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-      }}
-      whileHover={{ scale: 1.02 }}
-      className="group relative bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur-xl transition-all duration-300 hover:border-fuchsia-500/60 cursor-pointer shadow-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.25)]"
-    >
-      <div style={{ transform: "translateZ(50px)" }}>
-        {/* Gradient Glow on Hover */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-r ${service.color || "from-violet-600 to-fuchsia-600"} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-        />
-
-        <div className="relative z-10">
-          {/* Icon */}
-          <div
-            className={`w-14 h-14 rounded-xl bg-gradient-to-r ${service.color || "from-violet-600 to-fuchsia-600"} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}
-          >
-            <Icon size={28} className="text-white" />
+    <section id="services" className="relative py-24 md:py-36 bg-[#08090E] border-t border-slate-800">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+              <span className="text-xs font-mono tracking-widest text-fuchsia-400 uppercase">
+                STUDIO CAPABILITIES
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight">
+              WHAT WE{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
+                ENGINEER.
+              </span>
+            </h2>
           </div>
+          <p className="text-sm sm:text-base text-slate-400 max-w-md font-medium leading-relaxed">
+            We don't offer bloated 50-page PDFs. We execute tight, measurable creative assets designed to capture human attention in the first 2 seconds.
+          </p>
+        </div>
 
-          {/* Content */}
-          <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-all duration-300">
-            {service.title}
-          </h3>
-          <p className="text-slate-300 text-base leading-relaxed">{service.description}</p>
+        {/* Editorial Capabilities List */}
+        <div className="space-y-4">
+          {services?.map((service, index) => {
+            const Icon = iconMap[service.iconName] || Sparkles
+            const isActive = activeIdx === index
+            const tags = serviceTags[service.title] || ["High Quality", "Rapid Delivery", "100% Bespoke"]
+
+            return (
+              <motion.div
+                key={service.id || index}
+                onMouseEnter={() => setActiveIdx(index)}
+                className={`group relative rounded-2xl p-6 sm:p-8 transition-all duration-300 border cursor-pointer ${
+                  isActive
+                    ? "bg-[#0D0E15] border-fuchsia-500/60 shadow-[0_0_40px_rgba(255,46,147,0.2)]"
+                    : "bg-[#0B0C12]/80 border-slate-800 hover:border-slate-700"
+                }`}
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                  
+                  {/* Left: Number, Icon & Title */}
+                  <div className="flex items-start sm:items-center gap-5">
+                    <span className={`text-xl sm:text-2xl font-mono font-bold transition-colors ${
+                      isActive ? "text-pink-400" : "text-slate-600 group-hover:text-slate-400"
+                    }`}>
+                      0{index + 1}
+                    </span>
+
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+                      isActive
+                        ? "bg-gradient-to-tr from-violet-600 to-pink-500 text-white shadow-[0_0_20px_rgba(255,46,147,0.4)]"
+                        : "bg-slate-900 text-slate-400 group-hover:text-white"
+                    }`}>
+                      <Icon size={22} />
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-all">
+                        {service.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
+                        {service.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right: Deliverable Tags & Action Arrow */}
+                  <div className="flex items-center justify-between lg:justify-end gap-4 pl-12 sm:pl-0">
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag, tIdx) => (
+                        <span
+                          key={tIdx}
+                          className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-slate-900 border border-slate-800 text-slate-300 group-hover:border-fuchsia-500/40 transition-colors"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                      isActive
+                        ? "bg-gradient-to-tr from-violet-600 to-pink-500 text-white rotate-45 shadow-[0_0_15px_rgba(255,46,147,0.4)]"
+                        : "bg-slate-900 text-slate-500 group-hover:text-white"
+                    }`}>
+                      <ArrowUpRight size={18} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        {/* Bottom Studio Guarantee */}
+        <div className="mt-12 p-6 rounded-2xl bg-[#0D0E15] border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 size={20} className="text-fuchsia-400 shrink-0" />
+            <span className="text-xs sm:text-sm font-mono text-slate-300">
+              ALL EDITS GRADED IN DAVINCI RESOLVE • 4K EXPORTS • REVISIONS INCLUDED
+            </span>
+          </div>
+          <a
+            href="#contact"
+            className="text-xs font-mono font-bold text-fuchsia-400 hover:text-pink-300 hover:underline flex items-center gap-1"
+          >
+            <span>START A PROJECT</span>
+            <ArrowUpRight size={14} />
+          </a>
         </div>
       </div>
-    </motion.div>
+    </section>
   )
 }

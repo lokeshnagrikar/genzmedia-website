@@ -1,30 +1,43 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ArrowRight, Play, TrendingUp, Palette, MessageCircle, Sparkles, X, ExternalLink } from "lucide-react"
-import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useScroll, useTransform } from "framer-motion"
+import { ArrowRight, Play, TrendingUp, Sparkles, X, ExternalLink, Zap, Radio, CheckCircle2 } from "lucide-react"
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from "framer-motion"
 import MagneticButton from "./magnetic-button"
-import { SplitText } from "./split-text"
 import { useContent } from "@/hooks/use-content"
 
 export default function Hero() {
   const [isMounted, setIsMounted] = useState(false)
   const [showreelOpen, setShowreelOpen] = useState(false)
+  const [timecode, setTimecode] = useState("00:01:24:18")
   const { hero } = useContent()
-  
-  // Mouse tracking for spotlight
+
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Parallax Scroll Tracking
-  const { scrollY } = useScroll()
-  const p1 = useTransform(scrollY, [0, 1000], [0, 250])
-  const p2 = useTransform(scrollY, [0, 1000], [0, -200])
-  const p3 = useTransform(scrollY, [0, 1000], [0, 150])
-  const p4 = useTransform(scrollY, [0, 1000], [0, -300])
-
   useEffect(() => {
     setIsMounted(true)
+
+    // Dynamic running camera timecode
+    let frame = 18
+    let sec = 24
+    let min = 1
+    const interval = setInterval(() => {
+      frame += 1
+      if (frame >= 60) {
+        frame = 0
+        sec += 1
+        if (sec >= 60) {
+          sec = 0
+          min += 1
+        }
+      }
+      setTimecode(
+        `00:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}:${frame.toString().padStart(2, "0")}`
+      )
+    }, 1000 / 30)
+
+    return () => clearInterval(interval)
   }, [])
 
   // Close showreel with Escape key
@@ -50,262 +63,235 @@ export default function Hero() {
     mouseY.set(clientY - top)
   }
 
-  // Electric Cyberpunk & Neo-Tokyo dynamic aura
-  const backgroundGradient = useMotionTemplate`radial-gradient(1200px circle at ${mouseX}px ${mouseY}px, rgba(139, 92, 246, 0.16), rgba(255, 46, 147, 0.12), rgba(0, 240, 255, 0.05), transparent 80%)`
-  const spotlightGradient = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.12), transparent 100%)`
+  // Electric Cyberpunk spotlight aura
+  const backgroundGradient = useMotionTemplate`radial-gradient(1000px circle at ${mouseX}px ${mouseY}px, rgba(168, 85, 247, 0.14), rgba(255, 46, 147, 0.10), rgba(0, 240, 255, 0.04), transparent 75%)`
 
   if (!isMounted) return <div className="min-h-screen bg-[#08090E]" />
 
   return (
-    <section 
-      id="home" 
-      className="relative min-h-screen bg-[#08090E] overflow-hidden pt-24 pb-16 flex flex-col justify-center group"
+    <section
+      id="home"
+      className="relative min-h-screen bg-[#08090E] overflow-hidden pt-28 pb-12 flex flex-col justify-between"
       onMouseMove={handleMouseMove}
     >
+      {/* 🌌 Dynamic Studio Spotlight */}
       <motion.div
-        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 opacity-60 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-500 opacity-70"
         style={{ background: backgroundGradient }}
       />
 
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
 
-      {/* Thematic Floating Icons with Parallax wrappers */}
-      
-      {/* Video Editing (Play Button) */}
-      <motion.div style={{ y: p1 }} className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
-        <motion.div
-          animate={{ 
-            y: [0, -20, 0], 
-            rotate: [5, 0, 5],
-            rotateX: [0, 10, 0],
-            rotateY: [0, 10, 0]
-          }}
-          transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-          className="absolute top-32 right-[15%] w-24 h-24 bg-[#0D0E15]/80 backdrop-blur-xl border border-fuchsia-500/30 rounded-2xl shadow-[0_0_35px_rgba(255,46,147,0.25)] flex items-center justify-center pointer-events-none"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-pink-500/20 rounded-2xl" />
-          <Play className="w-10 h-10 text-pink-400 fill-pink-400/20 ml-1" />
-        </motion.div>
-      </motion.div>
-
-      {/* Meta Ads / Performance (TrendingUp) */}
-      <motion.div style={{ y: p2 }} className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
-        <motion.div
-          animate={{ 
-            y: [0, 25, 0], 
-            rotate: [-10, -5, -10],
-            rotateX: [0, -5, 0],
-            rotateY: [0, 5, 0]
-          }}
-          transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, delay: 1 }}
-          className="absolute bottom-32 right-[20%] w-28 h-28 bg-[#0D0E15]/80 backdrop-blur-xl border border-cyan-500/30 rounded-full shadow-[0_0_35px_rgba(0,240,255,0.2)] flex items-center justify-center pointer-events-none"
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-violet-500/20 rounded-full" />
-          <TrendingUp className="w-12 h-12 text-cyan-400" />
-        </motion.div>
-      </motion.div>
-
-      {/* Graphic Design / Thumbnails (Palette) */}
-      <motion.div style={{ y: p3 }} className="absolute inset-0 pointer-events-none z-10 hidden md:block">
-        <motion.div
-          animate={{ y: [0, -15, 0], rotate: [-15, -5, -15] }}
-          transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, delay: 2 }}
-          className="absolute top-40 left-[15%] w-20 h-20 bg-[#0D0E15]/80 backdrop-blur-xl border border-violet-500/30 rounded-2xl shadow-[0_0_35px_rgba(139,92,246,0.25)] flex items-center justify-center pointer-events-none"
-        >
-          <div className="absolute inset-0 bg-gradient-to-bl from-violet-500/20 to-amber-500/10 rounded-2xl" />
-          <Palette className="w-8 h-8 text-violet-400" />
-        </motion.div>
-      </motion.div>
-
-      {/* Social Media (MessageCircle) */}
-      <motion.div style={{ y: p4 }} className="absolute inset-0 pointer-events-none z-10 hidden md:block">
-        <motion.div
-          animate={{ y: [0, 20, 0], rotate: [10, 5, 10] }}
-          transition={{ duration: 8, ease: "easeInOut", repeat: Infinity, delay: 1.5 }}
-          className="absolute bottom-40 left-[15%] w-24 h-24 bg-[#0D0E15]/80 backdrop-blur-xl border border-rose-500/30 rounded-[2rem] shadow-[0_0_35px_rgba(244,63,94,0.2)] flex items-center justify-center pointer-events-none"
-        >
-          <div className="absolute inset-0 bg-gradient-to-tl from-rose-500/20 to-amber-500/20 rounded-[2rem]" />
-          <MessageCircle className="w-10 h-10 text-rose-400 fill-rose-400/20" />
-        </motion.div>
-      </motion.div>
-
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-8">
-          
-          {/* 🟢 Live Studio Availability Badge */}
-          {hero.availability?.active && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              className="flex justify-center"
-            >
-              <a
-                href={hero.availability?.link || "#contact"}
-                className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 rounded-full bg-[#0D0E15]/90 border border-emerald-500/40 text-xs sm:text-sm font-semibold text-slate-200 shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:border-emerald-400 hover:shadow-[0_0_35px_rgba(16,185,129,0.4)] transition-all cursor-pointer backdrop-blur-xl group hover:scale-105"
-              >
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                <span>{hero.availability?.text}</span>
-                <ArrowRight size={14} className="text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
-              </a>
-            </motion.div>
-          )}
-
-          {/* Main Heading with Electric Cyberpunk Gradient */}
-          <div className="relative mb-6 flex flex-col items-center text-center w-full">
-            <motion.div
-              className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
-              style={{ background: spotlightGradient }}
-            />
-            <SplitText 
-              text="We Help Business Owners & " 
-              delayBefore={0.6}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 justify-center pb-1 drop-shadow-[0_0_25px_rgba(255,46,147,0.35)]"
-            />
-            <SplitText 
-              text="Content Creators Grow" 
-              delayBefore={0.9}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight text-white justify-center drop-shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-            />
+      {/* 📹 CINEMA CAMERA VIEWFINDER HUD FRAME (TOP) */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mb-6 pointer-events-none">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3 text-[11px] font-mono tracking-widest text-slate-400">
+          {/* Left: REC Indicator */}
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5 text-white font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping inline-block" />
+              <span className="text-rose-400 font-extrabold">REC</span>
+            </span>
+            <span className="hidden sm:inline-block text-slate-600">|</span>
+            <span className="hidden sm:inline-block font-semibold text-slate-300">4K UHD • 60 FPS</span>
+            <span className="hidden md:inline-block text-slate-600">|</span>
+            <span className="hidden md:inline-block text-slate-300">SHUTTER 1/120</span>
           </div>
 
-          {/* Subheading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed px-4">
-              GENZMEDIA is a creative studio specializing in professional graphic design, high-impact thumbnails, clean
-              video editing, reliable social media management, and performance-driven Meta Ads — built to increase
-              attention, trust, and engagement.
-            </p>
-          </motion.div>
+          {/* Center: Live Running Camera Timecode */}
+          <div className="flex items-center gap-2 bg-[#0D0E15] px-3 py-1 rounded-md border border-slate-800 text-white font-bold">
+            <span className="text-fuchsia-400">TC:</span>
+            <span>{timecode}</span>
+          </div>
 
-          {/* CTA Buttons + Mini Showreel Trigger */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center items-center pt-6"
-          >
-            {/* Showreel Preview Button */}
-            <button
-              onClick={() => setShowreelOpen(true)}
-              className="px-7 py-4 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white font-bold text-base sm:text-lg hover:shadow-[0_0_35px_rgba(255,46,147,0.5)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3 group border border-pink-400/30 cursor-pointer"
-            >
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Play size={16} className="text-white ml-0.5 fill-white" />
-              </div>
-              <span>Watch 2026 Showreel</span>
-            </button>
-
-            <MagneticButton>
-              <a
-                href="#portfolio"
-                className="px-7 py-4 rounded-xl bg-[#0D0E15]/80 hover:bg-slate-900 text-white font-bold text-base sm:text-lg border border-slate-800 hover:border-violet-500/60 hover:shadow-[0_0_30px_rgba(139,92,246,0.35)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 group backdrop-blur-md"
-              >
-                View Our Work
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
-              </a>
-            </MagneticButton>
-
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="px-7 py-4 rounded-xl border border-slate-800 hover:border-fuchsia-500/60 text-slate-200 hover:text-white font-bold text-base sm:text-lg hover:bg-fuchsia-500/10 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center backdrop-blur-md"
-              >
-                Contact Us
-              </a>
-            </MagneticButton>
-          </motion.div>
-
-          {/* 🔥 Dynamic Stats Bar (Real-Time Live Synced) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 2, ease: [0.16, 1, 0.3, 1] }}
-            className="pt-12 sm:pt-16 max-w-5xl mx-auto"
-          >
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-              {hero.stats?.map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -6, scale: 1.03 }}
-                  transition={{ duration: 0.25 }}
-                  className={`relative p-5 sm:p-6 rounded-2xl bg-gradient-to-b ${stat.gradient} bg-[#0D0E15]/80 backdrop-blur-xl border ${stat.border} shadow-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.25)] text-left group overflow-hidden`}
-                >
-                  <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 group-hover:scale-125 transition-all text-2xl">
-                    {stat.emoji}
-                  </div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl sm:text-2xl">{stat.emoji}</span>
-                    <span className={`text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent tracking-tight`}>
-                      {stat.value}
-                    </span>
-                  </div>
-                  <h4 className="text-sm sm:text-base font-bold text-white tracking-wide">
-                    {stat.label}
-                  </h4>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {stat.desc}
-                  </p>
-                </motion.div>
-              ))}
+          {/* Right: Audio Wave Equalizer & Studio Status */}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-end gap-0.5 h-4 px-1">
+              <span className="w-1 bg-fuchsia-400 rounded-sm wave-bar-1" />
+              <span className="w-1 bg-fuchsia-400 rounded-sm wave-bar-2" />
+              <span className="w-1 bg-fuchsia-400 rounded-sm wave-bar-3" />
+              <span className="w-1 bg-fuchsia-400 rounded-sm wave-bar-4" />
+              <span className="w-1 bg-fuchsia-400 rounded-sm wave-bar-5" />
             </div>
-          </motion.div>
+            <span className="px-2 py-0.5 rounded bg-fuchsia-500/15 text-fuchsia-300 font-bold border border-fuchsia-500/30 text-[10px]">
+              STUDIO LIVE
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* 🎬 2026 Showreel Modal */}
+      {/* 🎯 MAIN HERO CONTENT */}
+      <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center my-auto">
+        {/* 🟢 Live Studio Availability Pill */}
+        {hero.availability?.active && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center mb-6"
+          >
+            <a
+              href={hero.availability?.link || "#contact"}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0D0E15] border border-emerald-500/40 text-xs font-semibold text-slate-200 shadow-[0_0_25px_rgba(16,185,129,0.2)] hover:border-emerald-400 transition-all cursor-pointer backdrop-blur-xl group hover:scale-105"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-slate-300">{hero.availability?.text}</span>
+              <ArrowRight size={13} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </motion.div>
+        )}
+
+        {/* ⚡ High-Swagger Studio Headline with Vibrant Gradient */}
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] tracking-tight uppercase mb-6 drop-shadow-[0_0_35px_rgba(255,46,147,0.25)]">
+          WE MAKE CONTENT <br />
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
+            PEOPLE CAN'T SCROLL PAST.
+          </span>
+        </h1>
+
+        {/* Studio Subtitle */}
+        <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed mb-10">
+          Raw footage in. High-retention viral attention out. We engineer short-form reels, high-CTR thumbnails, and performance creative for ambitious brands that refuse to be boring.
+        </p>
+
+        {/* 🚀 Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12">
+          <MagneticButton>
+            <a
+              href="#portfolio"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2 shadow-[0_0_35px_rgba(255,46,147,0.4)] hover:shadow-[0_0_45px_rgba(255,46,147,0.6)] transition-all hover:scale-105 border border-pink-400/30"
+            >
+              <span>EXPLORE WORK</span>
+              <ArrowRight size={18} />
+            </a>
+          </MagneticButton>
+
+          <MagneticButton>
+            <button
+              onClick={() => setShowreelOpen(true)}
+              className="w-full sm:w-auto px-7 py-4 rounded-xl bg-[#0D0E15] hover:bg-[#13151F] border border-slate-700 hover:border-fuchsia-500/60 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all hover:scale-105 cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-pink-400">
+                <Play size={14} className="fill-current translate-x-0.5" />
+              </div>
+              <span>WATCH 2026 SHOWREEL</span>
+            </button>
+          </MagneticButton>
+        </div>
+
+        {/* 📊 DYNAMIC STATS BAR */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
+          {hero.stats?.map((stat, idx) => (
+            <div
+              key={idx}
+              className="p-4 sm:p-5 rounded-2xl bg-[#0D0E15] border border-slate-800 text-left hover:border-fuchsia-500/50 transition-all hover:-translate-y-1 group hover:shadow-[0_0_30px_rgba(255,46,147,0.15)]"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xl sm:text-2xl">{stat.emoji}</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase">#0{idx + 1}</span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-colors">
+                {stat.value}
+              </div>
+              <div className="text-xs sm:text-sm font-bold text-slate-300 mt-0.5">{stat.label}</div>
+              <div className="text-[11px] text-slate-500 mt-1">{stat.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 🎞️ SEAMLESS INFINITE MARQUEE TICKER TAPE */}
+      <div className="relative z-20 w-full mt-12 py-4 bg-[#0D0E15] border-y border-slate-800 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap flex items-center gap-8 text-xs sm:text-sm font-mono tracking-widest text-slate-300 uppercase">
+          <span className="flex items-center gap-2">
+            <span className="text-pink-400">🔥</span> 50K+ ORGANIC VIEWS • LITTLE FLOWERS SCHOOL
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-fuchsia-400">🎬</span> 350+ DELIVERED EDITS
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-cyan-400">📈</span> 4.2x AVERAGE CTR
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-pink-400">🎯</span> 120+ ADMISSIONS LEADS • ACUTE PUBLIC SCHOOL
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-amber-400">⚡</span> NO GENERIC TEMPLATES • 100% BESPOKE PACING
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-fuchsia-400">👑</span> FOUNDED BY CREATORS FOR BRANDS
+          </span>
+          <span className="text-slate-600">/</span>
+          {/* Repeated for continuous infinite scroll */}
+          <span className="flex items-center gap-2">
+            <span className="text-pink-400">🔥</span> 50K+ ORGANIC VIEWS • LITTLE FLOWERS SCHOOL
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-fuchsia-400">🎬</span> 350+ DELIVERED EDITS
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-cyan-400">📈</span> 4.2x AVERAGE CTR
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-pink-400">🎯</span> 120+ ADMISSIONS LEADS • ACUTE PUBLIC SCHOOL
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="flex items-center gap-2">
+            <span className="text-amber-400">⚡</span> NO GENERIC TEMPLATES • 100% BESPOKE PACING
+          </span>
+        </div>
+      </div>
+
+      {/* 🎬 IN-BROWSER SHOWREEL POPUP MODAL */}
       <AnimatePresence>
         {showreelOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            {/* Backdrop */}
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowreelOpen(false)}
-              className="fixed inset-0 bg-[#08090E]/90 backdrop-blur-2xl transition-opacity"
+              className="fixed inset-0 bg-[#08090E]/95 backdrop-blur-2xl transition-opacity"
             />
 
-            {/* Modal Box */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-lg bg-[#0D0E15]/95 border border-slate-700/80 rounded-3xl p-4 sm:p-6 shadow-2xl z-10 backdrop-blur-2xl flex flex-col my-auto"
+              className="relative w-full max-w-lg bg-[#0D0E15] border border-slate-700 rounded-3xl p-5 sm:p-6 shadow-2xl z-10 flex flex-col my-auto"
             >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-violet-500/20 to-pink-500/20 border border-fuchsia-500/40 text-fuchsia-300">
-                      ⚡ Official 2026 Showreel
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30">
+                      OFFICIAL 2026 SHOWREEL
                     </span>
-                    <span className="text-xs text-slate-400">GENZMEDIA Studio</span>
+                    <span className="text-xs text-slate-400 font-mono">GENZMEDIA</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white tracking-tight">
-                    Creative Production & Growth Edits
-                  </h3>
+                  <h3 className="text-lg font-bold text-white">Creative Production & High-Retention Edits</h3>
                 </div>
 
                 <button
                   onClick={() => setShowreelOpen(false)}
-                  className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700 shrink-0 cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Close Showreel"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
 
-              {/* Showreel Video Frame */}
-              <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center min-h-[460px] sm:min-h-[500px]">
+              {/* Showreel Frame */}
+              <div className="relative w-full rounded-2xl overflow-hidden bg-black border border-slate-800 flex items-center justify-center min-h-[460px] sm:min-h-[500px]">
                 <iframe
                   src={`https://www.instagram.com/reel/${hero.showreelId || "DapY6qrO-V3"}/embed/`}
                   className="w-full h-[480px] sm:h-[520px] rounded-2xl border-0"
@@ -314,24 +300,17 @@ export default function Hero() {
                 />
               </div>
 
-              {/* Footer CTA */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-800">
+              {/* Modal Footer */}
+              <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-800">
+                <span className="text-xs text-slate-400 font-mono">Real Client Work</span>
                 <a
-                  href="#portfolio"
-                  onClick={() => setShowreelOpen(false)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-sm font-semibold transition-colors border border-slate-700"
+                  href={hero.showreelUrl || "#"}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-fuchsia-400 hover:underline"
                 >
-                  <span>Explore All Projects</span>
-                  <ArrowRight size={14} />
-                </a>
-
-                <a
-                  href="#contact"
-                  onClick={() => setShowreelOpen(false)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white text-sm font-bold shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/45 transition-all"
-                >
-                  <Sparkles size={16} />
-                  <span>Start Your Project</span>
+                  <span>Open on Instagram</span>
+                  <ExternalLink size={12} />
                 </a>
               </div>
             </motion.div>

@@ -3,7 +3,7 @@
   "hero": {
     "availability": {
       "active": true,
-      "text": "Taking on 2 New Client Projects for This Month",
+      "text": "Taking on 5 New Client Projects for This Month",
       "link": "#contact"
     },
     "showreelUrl": "https://www.instagram.com/reel/DapY6qrO-V3/?utm_source=ig_web_copy_link&igsi=MzRlODBiNWFlZA==",
@@ -224,5 +224,6 @@
         "url": "https://www.instagram.com/sahilkamdi_"
       }
     ]
-  }
+  },
+  "_updatedAt": 1788439671097
 }

@@ -1,178 +1,98 @@
 "use client"
 
-import { ArrowRight, Phone, Mail, Instagram } from "lucide-react"
+import { Phone, Mail, Instagram, ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import MagneticButton from "./magnetic-button"
-import { SplitText } from "./split-text"
 import { useContent } from "@/hooks/use-content"
 
 export default function CTA() {
   const { contact: contactData } = useContent()
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
-
   return (
-    <section id="contact" className="relative py-20 md:py-32 bg-[#08090E] border-t border-slate-800/80 overflow-hidden">
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-[#08090E] to-pink-950/20" />
-
-      {/* Dynamic Floating Shapes using Framer Motion */}
-      <motion.div
-        animate={{ 
-          y: [-20, 20, -20],
-          x: [-20, 20, -20],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
-        className="absolute top-20 right-10 w-[400px] h-[400px] bg-fuchsia-600/20 rounded-full mix-blend-screen filter blur-[120px] pointer-events-none"
-      />
-      
-      <motion.div
-        animate={{ 
-          y: [20, -20, 20],
-          x: [20, -20, 20],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 10, ease: "easeInOut", repeat: Infinity, delay: 1 }}
-        className="absolute bottom-10 left-10 w-[350px] h-[350px] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] pointer-events-none"
-      />
+    <section id="contact" className="relative py-24 md:py-36 bg-[#08090E] border-t border-slate-800 overflow-hidden">
+      {/* Dynamic Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-fuchsia-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {/* Main Header */}
-          <div className="text-center mb-16">
-            <SplitText 
-              text="Ready to Upgrade Your Content, Socials & Ads?" 
-              className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 pb-4 justify-center max-w-4xl mx-auto drop-shadow-[0_0_25px_rgba(255,46,147,0.35)]"
-            />
-            <motion.p 
-              variants={itemVariants}
-              className="text-xl text-slate-300 mb-8 leading-relaxed max-w-3xl mx-auto"
-            >
-              If you are a business owner or content creator looking for professional thumbnails, clean video editing,
-              consistent social media management, Meta Ads for growth, and modern graphic design, let's work together.
-            </motion.p>
+        {/* Main Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0D0E15] border border-slate-800 text-xs font-mono text-fuchsia-300 mb-4">
+            <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+            <span>DIRECT ACCESS TO FOUNDERS</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight mb-4">
+            READY TO MAKE CONTENT THAT <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
+              ACTUALLY CONVERTS?
+            </span>
+          </h2>
+          <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto font-medium">
+            Whether you need a high-retention reel package, a school admissions campaign, or high-CTR thumbnails, talk directly with Sahil and Navin today.
+          </p>
+        </div>
+
+        {/* 📞 Contact Channel Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Phone Card */}
+          <div className="bg-[#0D0E15] rounded-2xl p-7 border border-slate-800 hover:border-fuchsia-500/60 transition-all duration-300 shadow-xl group">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-pink-600 flex items-center justify-center mb-6 shadow-md shadow-fuchsia-500/20 group-hover:scale-110 transition-transform">
+              <Phone size={22} className="text-white" />
+            </div>
+            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-3">Direct Phone</h3>
+            <div className="space-y-2">
+              {contactData?.phones?.map((phone, idx) => (
+                <a
+                  key={idx}
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className="block text-white font-mono font-bold text-base hover:text-fuchsia-400 transition-colors py-2 px-3 rounded-lg bg-black/40 border border-slate-800/80"
+                >
+                  {phone}
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Contact Button */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-24">
-            <MagneticButton>
-              <a
-                href="#contact-cards"
-                className="px-10 py-5 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white font-bold text-xl hover:shadow-[0_0_40px_rgba(255,46,147,0.5)] transition-all duration-300 flex items-center justify-center gap-3 group border border-pink-400/30 cursor-pointer"
-              >
-                Let's Work Together
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          {/* Email Card */}
+          <div className="bg-[#0D0E15] rounded-2xl p-7 border border-slate-800 hover:border-cyan-500/60 transition-all duration-300 shadow-xl group">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-600 to-violet-600 flex items-center justify-center mb-6 shadow-md shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+              <Mail size={22} className="text-white" />
+            </div>
+            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-3">Email Inquiries</h3>
+            <div className="space-y-2">
+              {contactData?.emails?.map((email, idx) => (
+                <a
+                  key={idx}
+                  href={`mailto:${email}`}
+                  className="block text-white font-mono font-bold text-xs sm:text-sm hover:text-cyan-400 transition-colors py-2 px-3 rounded-lg bg-black/40 border border-slate-800/80 overflow-hidden text-ellipsis"
                 >
-                  <ArrowRight size={24} className="text-white" />
-                </motion.div>
-              </a>
-            </MagneticButton>
-          </motion.div>
+                  {email}
+                </a>
+              ))}
+            </div>
+          </div>
 
-          {/* Contact Cards */}
-          <motion.div 
-            id="contact-cards"
-            variants={containerVariants}
-            className="grid lg:grid-cols-3 gap-6"
-          >
-            {/* Phone Card */}
-            <motion.div 
-              variants={itemVariants} 
-              whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur hover:border-fuchsia-500/50 transition-all duration-300 shadow-xl group cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-fuchsia-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex flex-col items-center text-center relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-fuchsia-500/20">
-                  <Phone size={28} className="text-white" />
-                </div>
-                <h3 className="text-sm text-fuchsia-300/80 uppercase tracking-widest mb-4 font-bold">Call Us</h3>
-                <div className="space-y-3 w-full">
-                  {contactData?.phones?.map((phone, idx) => (
-                    <a
-                      key={idx}
-                      href={`tel:${phone.replace(/\s+/g, "")}`}
-                      className="block text-white font-bold text-lg hover:text-fuchsia-400 transition-colors w-full bg-slate-950/70 py-3 rounded-lg border border-slate-800"
-                    >
-                      {phone}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Email Card */}
-            <motion.div 
-              variants={itemVariants} 
-              whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur hover:border-cyan-500/50 transition-all duration-300 shadow-xl group cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex flex-col items-center text-center relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-600 to-violet-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 shadow-lg shadow-cyan-500/20">
-                  <Mail size={28} className="text-white" />
-                </div>
-                <h3 className="text-sm text-cyan-300/80 uppercase tracking-widest mb-4 font-bold">Email</h3>
-                <div className="space-y-3 w-full">
-                  {contactData?.emails?.map((email, idx) => (
-                    <a
-                      key={idx}
-                      href={`mailto:${email}`}
-                      className="block text-white font-bold text-sm sm:text-base hover:text-cyan-400 transition-colors w-full bg-slate-950/70 py-3 rounded-lg border border-slate-800 overflow-hidden text-ellipsis px-2"
-                    >
-                      {email}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Instagram Card */}
-            <motion.div 
-              variants={itemVariants} 
-              whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-gradient-to-br from-[#0D0E15] to-[#12141F] rounded-2xl p-8 border border-slate-800 backdrop-blur hover:border-pink-500/50 transition-all duration-300 shadow-xl group cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="flex flex-col items-center text-center relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-600 to-amber-500 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-pink-500/20">
-                  <Instagram size={28} className="text-white" />
-                </div>
-                <h3 className="text-sm text-pink-300/80 uppercase tracking-widest mb-4 font-bold">Follow Us</h3>
-                <div className="space-y-3 w-full">
-                  {contactData?.instagram?.map((item, idx) => (
-                    <a
-                      key={idx}
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-white font-bold text-lg hover:text-pink-400 transition-colors w-full bg-slate-950/70 py-3 rounded-lg border border-slate-800"
-                    >
-                      {item.handle}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+          {/* Instagram Card */}
+          <div className="bg-[#0D0E15] rounded-2xl p-7 border border-slate-800 hover:border-pink-500/60 transition-all duration-300 shadow-xl group">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-pink-600 to-amber-500 flex items-center justify-center mb-6 shadow-md shadow-pink-500/20 group-hover:scale-110 transition-transform">
+              <Instagram size={22} className="text-white" />
+            </div>
+            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-3">Instagram DM</h3>
+            <div className="space-y-2">
+              {contactData?.instagram?.map((item, idx) => (
+                <a
+                  key={idx}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-white font-mono font-bold text-sm hover:text-pink-400 transition-colors py-2 px-3 rounded-lg bg-black/40 border border-slate-800/80"
+                >
+                  {item.handle}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

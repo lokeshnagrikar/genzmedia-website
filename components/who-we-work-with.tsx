@@ -7,43 +7,55 @@ const audiences = [
   {
     icon: Briefcase,
     label: "Business Owners",
-    description: "Scale your brand with professional visuals and strategic ads",
+    description: "Scale your revenue with high-retention ads and brand storytelling.",
   },
   {
     icon: User,
-    label: "Entrepreneurs",
-    description: "Build credibility and consistent online presence",
+    label: "Founders & CEOs",
+    description: "Turn your personal LinkedIn & Instagram into an authority engine.",
   },
   {
     icon: Users,
-    label: "Personal Brands",
-    description: "Stand out with unique, professional content",
+    label: "Schools & Academies",
+    description: "Drive record admissions with high-energy student culture reels.",
   },
   {
     icon: PlayCircle,
     label: "Content Creators",
-    description: "Grow your audience with high-impact visuals",
+    description: "Save 30+ hours/week with bespoke, surgically paced video edits.",
   },
   {
     icon: Award,
-    label: "Coaches & Educators",
-    description: "Establish authority with premium design and editing",
+    label: "Coaches & Consultants",
+    description: "Establish instant credibility with elite studio-grade thumbnails.",
   },
 ]
 
-// Duplicate the array to create a seamless loop
 const marqueeItems = [...audiences, ...audiences, ...audiences]
 
 export default function WhoWeWorkWith() {
   return (
-    <section className="relative py-20 md:py-32 bg-slate-950 border-t border-slate-800 overflow-hidden">
+    <section className="relative py-24 md:py-36 bg-[#08090E] border-t border-slate-800 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text bg-gradient-to-r from-purple-400 to-pink-400">Who We Work With</span>
-          </h2>
-          <p className="text-xl text-slate-300">We partner with ambitious creators and businesses ready to grow</p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+              <span className="text-xs font-mono tracking-widest text-fuchsia-400 uppercase">
+                PARTNER ECOSYSTEM
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight">
+              BUILT FOR{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
+                GROWTH.
+              </span>
+            </h2>
+          </div>
+          <p className="text-sm sm:text-base text-slate-400 max-w-md font-medium leading-relaxed">
+            We partner with ambitious founders, schools, and high-growth creators ready to dominate attention.
+          </p>
         </div>
       </div>
 
@@ -55,7 +67,7 @@ export default function WhoWeWorkWith() {
           transition={{
             repeat: Infinity,
             ease: "linear",
-            duration: 25, // Adjust speed here
+            duration: 30,
           }}
         >
           {marqueeItems.map((audience, index) => {
@@ -63,20 +75,17 @@ export default function WhoWeWorkWith() {
             return (
               <div
                 key={index}
-                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-md transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:-translate-y-2 w-[350px] shrink-0"
+                className="group relative bg-[#0D0E15] rounded-2xl p-8 border border-slate-800 transition-all duration-300 hover:border-fuchsia-500/60 hover:shadow-[0_0_30px_rgba(255,46,147,0.2)] hover:-translate-y-2 w-[340px] shrink-0 text-left"
               >
-                {/* Glow on hover inside card */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative z-10 text-center">
-                  <div className="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-gradient-to-tr group-hover:from-purple-500 group-hover:to-pink-500 transition-all duration-300">
-                    <Icon size={28} className="text-slate-300 group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3 tracking-wide">
-                    {audience.label}
-                  </h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{audience.description}</p>
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600/30 to-pink-600/30 border border-fuchsia-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Icon size={22} className="text-pink-400" />
                 </div>
+                <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-all">
+                  {audience.label}
+                </h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-medium">
+                  {audience.description}
+                </p>
               </div>
             )
           })}

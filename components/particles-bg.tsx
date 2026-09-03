@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
 
 export default function ParticlesBg() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -33,10 +32,10 @@ export default function ParticlesBg() {
       constructor() {
         this.x = Math.random() * canvas!.width
         this.y = Math.random() * canvas!.height
-        this.size = Math.random() * 2 + 0.1
-        this.speedX = Math.random() * 0.5 - 0.25
-        this.speedY = Math.random() * 0.5 - 0.25
-        this.opacity = Math.random() * 0.5 + 0.1
+        this.size = Math.random() * 1.5 + 0.2
+        this.speedX = Math.random() * 0.3 - 0.15
+        this.speedY = Math.random() * 0.3 - 0.15
+        this.opacity = Math.random() * 0.3 + 0.05
       }
 
       update() {
@@ -52,7 +51,7 @@ export default function ParticlesBg() {
 
       draw() {
         if (!ctx) return
-        ctx.fillStyle = `rgba(168, 85, 247, ${this.opacity})` // Purple-ish
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.4})`
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fill()
@@ -61,18 +60,18 @@ export default function ParticlesBg() {
 
     const initParticles = () => {
       particles = []
-      const numberOfParticles = (canvas.width * canvas.height) / 15000
-      for (let i = 0; i < numberOfParticles; i++) {
+      const particleCount = Math.min(Math.floor(window.innerWidth / 30), 40)
+      for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle())
       }
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update()
-        particles[i].draw()
-      }
+      particles.forEach((particle) => {
+        particle.update()
+        particle.draw()
+      })
       animationFrameId = requestAnimationFrame(animate)
     }
 
@@ -89,8 +88,7 @@ export default function ParticlesBg() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-40 bg-slate-950"
-      style={{ filter: "blur(0.5px)" }}
+      className="fixed inset-0 pointer-events-none z-0 opacity-40"
     />
   )
 }

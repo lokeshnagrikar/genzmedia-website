@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Play, X, ExternalLink, Sparkles, TrendingUp, ArrowRight, Zap } from "lucide-react"
+import { Play, X, ExternalLink, ArrowRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { SplitText } from "./split-text"
 import { PortfolioItem } from "@/lib/content"
 import { useContent } from "@/hooks/use-content"
 
@@ -28,180 +27,144 @@ export default function Portfolio() {
     }
   }, [selectedVideo])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.92, y: 30 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } },
-  }
-
   return (
-    <section id="portfolio" className="relative py-20 md:py-32 bg-[#08090E] border-t border-slate-800/80">
+    <section id="portfolio" className="relative py-24 md:py-36 bg-[#08090E] border-t border-slate-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <SplitText
-            text="Our Work"
-            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 [&>span]:bg-clip-text [&>span]:text-transparent [&>span]:bg-gradient-to-r [&>span]:from-violet-400 [&>span]:via-fuchsia-400 [&>span]:to-amber-400 pb-2 justify-center drop-shadow-[0_0_25px_rgba(255,46,147,0.3)]"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-slate-300 max-w-2xl mx-auto mb-4"
-          >
-            Every project follows a clear process: Concept → Design/Edit → Purpose → Audience. We focus on quality,
-            clarity, and quantifiable growth.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/25 text-xs font-semibold text-fuchsia-300"
-          >
-            <Sparkles size={14} className="text-pink-400" />
-            Click any reel to play directly in-app
-          </motion.div>
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+              <span className="text-xs font-mono tracking-widest text-fuchsia-400 uppercase">
+                SELECTED CASE STUDIES
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight">
+              PROOF OVER{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400">
+                PROMISES.
+              </span>
+            </h2>
+          </div>
+          <p className="text-sm sm:text-base text-slate-400 max-w-md font-medium leading-relaxed">
+            Real reels produced for real clients. Millions of organic views, admissions campaigns, and branded stories edited with surgical pacing.
+          </p>
         </div>
 
-        {/* Video Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-        >
-          {portfolio.map((video, idx) => (
+        {/* 🎬 Video Monitor Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {portfolio?.map((video, idx) => (
             <motion.div
               key={`${video.id}-${idx}`}
-              variants={itemVariants}
               whileHover={{ y: -8 }}
-              className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.35)] transition-all duration-500"
+              className="group relative rounded-2xl overflow-hidden cursor-pointer bg-[#0D0E15] border border-slate-800 hover:border-fuchsia-500/80 transition-all duration-300 shadow-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.35)]"
               onClick={() => setSelectedVideo(video)}
             >
-              <div className="relative w-full aspect-[9/16] bg-[#0D0E15] overflow-hidden rounded-2xl border border-slate-800 group-hover:border-fuchsia-500/80 transition-all duration-300">
-                {/* Thumbnail Image with Grayscale to Color hover effect */}
+              {/* 9:16 Video Frame */}
+              <div className="relative w-full aspect-[9/16] bg-black overflow-hidden">
                 <img
                   src={video.thumbnail || "/insta-reel1.png"}
-                  alt={`${video.client} - ${video.title}`}
-                  className="w-full h-full object-cover scale-100 group-hover:scale-105 grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                  alt={video.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => {
                     e.currentTarget.src = "/insta-reel1.png"
                   }}
                 />
 
-                {/* Dark Gradient Overlay for Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#08090E] via-[#08090E]/40 to-[#08090E]/70 opacity-90 group-hover:opacity-75 transition-opacity duration-500" />
+                {/* Dark Vignette Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#08090E] via-black/20 to-black/60 pointer-events-none" />
 
-                {/* Top Badges: Client Name + Metric Badge */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#08090E]/85 backdrop-blur-md border border-white/10 text-[11px] font-bold text-slate-200 truncate max-w-[55%]">
-                    {video.client}
+                {/* Top HUD: Client & Metric Badge */}
+                <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
+                  <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 backdrop-blur-md">
+                    {video.metric || "Viral Cut"}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg backdrop-blur-md border text-[11px] font-extrabold flex items-center gap-1 shrink-0 ${video.badgeColor || "bg-fuchsia-500/20 border-fuchsia-500/40 text-fuchsia-300"}`}>
-                    <TrendingUp size={12} />
-                    {video.metric}
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 backdrop-blur-md">
+                    4K 60FPS
                   </span>
                 </div>
 
-                {/* Center Glowing Play Button */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-pink-500 flex items-center justify-center transform scale-90 group-hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(255,46,147,0.6)] group-hover:rotate-6">
-                    <Play size={26} className="text-white ml-1 fill-white" />
+                {/* Center Play Button on Hover */}
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-pink-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:scale-110 shadow-[0_0_30px_rgba(255,46,147,0.5)] transition-all duration-300">
+                    <Play size={20} className="fill-current translate-x-0.5" />
                   </div>
-                  <span className="mt-3 text-xs font-semibold text-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#08090E]/90 px-3 py-1 rounded-full backdrop-blur-sm border border-fuchsia-500/30">
-                    Watch Preview
-                  </span>
                 </div>
 
-                {/* Bottom Content Info */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 z-10 bg-gradient-to-t from-[#08090E] via-[#08090E]/90 to-transparent pt-8">
-                  <span className="inline-block px-2 py-0.5 mb-2 rounded text-[10px] uppercase font-extrabold tracking-wider bg-white/10 text-slate-300 backdrop-blur-sm">
-                    {video.tag}
-                  </span>
-                  <h3 className="text-white font-black text-lg leading-snug drop-shadow-md group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-all">
+                {/* Bottom Metadata */}
+                <div className="absolute bottom-4 inset-x-4 z-10">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-fuchsia-400 font-bold mb-1">
+                    {video.client}
+                  </div>
+                  <h3 className="text-lg font-black text-white leading-tight uppercase group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-300 group-hover:to-pink-300 transition-colors">
                     {video.title}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-1">
-                    {video.subtitle}
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-1 font-medium">
+                    {video.subtitle || video.tag}
                   </p>
                 </div>
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-center"
-        >
+        {/* Bottom CTA Banner */}
+        <div className="text-center">
           <a
-            href="#contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white font-bold text-lg rounded-xl hover:shadow-[0_0_35px_rgba(255,46,147,0.5)] transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer"
+            href="https://www.instagram.com/navin____24k"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0D0E15] border border-slate-800 hover:border-fuchsia-500/50 text-slate-300 hover:text-white text-xs font-mono font-bold uppercase tracking-widest transition-all"
           >
-            <span>Want high-impact content like this?</span>
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            <span>WATCH MORE ON INSTAGRAM</span>
+            <ExternalLink size={14} className="text-pink-400" />
           </a>
-        </motion.div>
+        </div>
       </div>
 
-      {/* 🎬 Sleek In-Browser Video Modal */}
+      {/* 🎬 IN-BROWSER VIDEO MODAL PLAYER */}
       <AnimatePresence>
         {selectedVideo && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            {/* Backdrop */}
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedVideo(null)}
-              className="fixed inset-0 bg-[#08090E]/85 backdrop-blur-xl transition-opacity"
+              className="fixed inset-0 bg-[#08090E]/95 backdrop-blur-2xl transition-opacity"
             />
 
-            {/* Modal Box */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-lg bg-[#0D0E15]/95 border border-slate-700/80 rounded-3xl p-4 sm:p-6 shadow-2xl z-10 backdrop-blur-2xl flex flex-col my-auto"
+              className="relative w-full max-w-lg bg-[#0D0E15] border border-slate-700 rounded-3xl p-5 sm:p-6 shadow-2xl z-10 flex flex-col my-auto"
             >
               {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
+              <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-fuchsia-400 uppercase tracking-wider">
-                      {selectedVideo.client}
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${selectedVideo.badgeColor || "bg-fuchsia-500/20 border-fuchsia-500/40 text-fuchsia-300"}`}>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30">
                       {selectedVideo.metric}
                     </span>
+                    <span className="text-xs text-slate-400 font-mono">{selectedVideo.client}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white tracking-tight">
-                    {selectedVideo.title}
-                  </h3>
+                  <h3 className="text-lg font-bold text-white uppercase">{selectedVideo.title}</h3>
                 </div>
 
                 <button
                   onClick={() => setSelectedVideo(null)}
-                  className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700 shrink-0 cursor-pointer"
-                  aria-label="Close Modal"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="Close Player"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
 
-              {/* In-Browser Video Player Embed */}
-              <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center min-h-[460px] sm:min-h-[500px]">
+              {/* Instagram Embed Player */}
+              <div className="relative w-full rounded-2xl overflow-hidden bg-black border border-slate-800 flex items-center justify-center min-h-[460px] sm:min-h-[500px]">
                 <iframe
                   src={`https://www.instagram.com/reel/${selectedVideo.id}/embed/`}
                   className="w-full h-[480px] sm:h-[520px] rounded-2xl border-0"
@@ -210,25 +173,17 @@ export default function Portfolio() {
                 />
               </div>
 
-              {/* Modal Footer Actions */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-800">
+              {/* Modal Footer */}
+              <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-800">
+                <span className="text-xs text-slate-400 font-mono">GENZMEDIA Studio Cut</span>
                 <a
                   href={selectedVideo.url}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-sm font-semibold transition-colors border border-slate-700"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-fuchsia-400 hover:underline"
                 >
-                  <ExternalLink size={16} />
                   <span>Open on Instagram</span>
-                </a>
-
-                <a
-                  href="#contact"
-                  onClick={() => setSelectedVideo(null)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500 text-white text-sm font-bold shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/45 transition-all"
-                >
-                  <span>Book Project Like This</span>
-                  <ArrowRight size={16} />
+                  <ExternalLink size={12} />
                 </a>
               </div>
             </motion.div>
