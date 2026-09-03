@@ -10,8 +10,12 @@ declare global {
   var __genz_content: SiteContent | undefined
 }
 
+function cleanEnv(val?: string): string | undefined {
+  if (!val) return undefined
+  return val.trim().replace(/^["']|["']$/g, "").replace(/\/+$/, "")
+}
+
 function getCloudKVCredentials(): { url?: string; token?: string } {
-  // 1. Check exact matches
   let url =
     process.env.KV_REST_API_URL ||
     process.env.UPSTASH_REDIS_REST_URL ||
@@ -26,7 +30,6 @@ function getCloudKVCredentials(): { url?: string; token?: string } {
     process.env.STORAGE_UPSTASH_REDIS_REST_TOKEN ||
     process.env.REDIS_TOKEN
 
-  // 2. Dynamic prefix search (fallback)
   if (!url || !token) {
     for (const key in process.env) {
       if (key.endsWith("_REST_API_URL") && !url) {
@@ -38,15 +41,16 @@ function getCloudKVCredentials(): { url?: string; token?: string } {
     }
   }
 
-  return { url, token }
+  return { url: cleanEnv(url), token: cleanEnv(token) }
 }
 
-// 1. Upstash Redis / Vercel KV REST helper (Official Upstash Redis REST Command format)
+// 1. Upstash Redis / Vercel KV REST helper (Dual Format: Command Array + REST Path)
 async function fetchCloudKV(): Promise<SiteContent | null> {
   const { url: kvUrl, token: kvToken } = getCloudKVCredentials()
 
   if (!kvUrl || !kvToken) return null
 
+  // Attempt 1: Command array format
   try {
     const res = await fetch(`${kvUrl}`, {
       method: "POST",
@@ -64,9 +68,25 @@ async function fetchCloudKV(): Promise<SiteContent | null> {
         return parsed as SiteContent
       }
     }
+  } catch {}
+
+  // Attempt 2: REST path format
+  try {
+    const res = await fetch(`${kvUrl}/get/genz_site_content`, {
+      headers: { Authorization: `Bearer ${kvToken}` },
+      cache: "no-store",
+    })
+    const data = await res.json()
+    if (data && data.result) {
+      const parsed = typeof data.result === "string" ? JSON.parse(data.result) : data.result
+      if (parsed && typeof parsed === "object" && parsed.hero) {
+        return parsed as SiteContent
+      }
+    }
   } catch (err) {
     console.error("Cloud KV fetch error:", err)
   }
+
   return null
 }
 
@@ -75,8 +95,10 @@ async function saveCloudKV(content: SiteContent): Promise<boolean> {
 
   if (!kvUrl || !kvToken) return false
 
+  const rawString = JSON.stringify(content)
+
+  // Attempt 1: Command array format
   try {
-    const rawString = JSON.stringify(content)
     const res = await fetch(`${kvUrl}`, {
       method: "POST",
       headers: {
@@ -86,7 +108,23 @@ async function saveCloudKV(content: SiteContent): Promise<boolean> {
       body: JSON.stringify(["SET", "genz_site_content", rawString]),
     })
     const data = await res.json()
-    return !!data && (data.result === "OK" || data.result === true || typeof data.result === "string")
+    if (data && (data.result === "OK" || data.result === true || typeof data.result === "string")) {
+      return true
+    }
+  } catch {}
+
+  // Attempt 2: REST path format
+  try {
+    const res = await fetch(`${kvUrl}/set/genz_site_content`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${kvToken}`,
+        "Content-Type": "application/json",
+      },
+      body: rawString,
+    })
+    const data = await res.json()
+    return !!data && (data.result === "OK" || data.result === true)
   } catch (err) {
     console.error("Cloud KV save error:", err)
     return false

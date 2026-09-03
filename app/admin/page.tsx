@@ -101,9 +101,30 @@ export default function AdminPage() {
   async function fetchContent() {
     try {
       setIsLoading(true)
+      let localCache: any = null
+      if (typeof window !== "undefined") {
+        try {
+          const cached = localStorage.getItem("genz_site_content_cache")
+          if (cached) {
+            localCache = JSON.parse(cached)
+            if (localCache && localCache.hero) {
+              setContent((prev) => ({ ...prev, ...localCache }))
+            }
+          }
+        } catch {}
+      }
+
       const res = await fetch(`/api/admin/content?t=${Date.now()}`, { cache: "no-store" })
       const data = await res.json()
       if (data.success && data.data) {
+        const serverData = data.data
+        const serverTime = serverData._updatedAt || 0
+        const localTime = localCache?._updatedAt || 0
+
+        if (localTime && localTime > serverTime) {
+          return
+        }
+
         setContent((prev) => ({
           ...prev,
           ...data.data,
